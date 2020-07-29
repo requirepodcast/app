@@ -28,7 +28,7 @@ const Description = styled.Text`
 
 function ListenScreen() {
   const episodes = useSelector((store) => store.episodes);
-  const episode = episodes && episodes.slice(-1)[0];
+  const episode = episodes.slice(-1)[0];
 
   return (
     <Wrapper>

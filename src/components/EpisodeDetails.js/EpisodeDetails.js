@@ -1,11 +1,29 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useLayoutEffect} from 'react';
+import styled from 'styled-components/native';
 
-function EpisodeDetails() {
+const Wrapper = styled.View`
+  flex: 1;
+  background-color: ${({theme}) => theme.bg.light};
+`;
+
+const Text = styled.Text`
+  color: ${({theme}) => theme.fg};
+`;
+
+function EpisodeDetails({
+  route: {
+    params: {episode},
+  },
+  navigation,
+}) {
+  useLayoutEffect(() => {
+    navigation.setOptions({title: episode.title});
+  });
+
   return (
-    <View>
-      <Text>Details</Text>
-    </View>
+    <Wrapper>
+      <Text>{episode.title}</Text>
+    </Wrapper>
   );
 }
 

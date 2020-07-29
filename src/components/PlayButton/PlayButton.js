@@ -7,8 +7,10 @@ const Button = styled(Icon)`
   background-color: ${({theme}) => theme.red};
   color: ${({theme}) => theme.fg};
   font-size: 50px;
+  border-radius: 45px;
+  overflow: hidden;
+  text-align: center;
   padding: 20px;
-  border-radius: 50px;
 `;
 
 function PlayButton({onPress}) {

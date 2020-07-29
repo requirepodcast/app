@@ -1,4 +1,4 @@
-function reducer(state = {}, action) {
+function reducer(state = {episodes: []}, action) {
   switch (action.type) {
     case 'EPISODES':
       return {...state, episodes: action.episodes};
