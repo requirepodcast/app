@@ -1,13 +1,36 @@
 import React, {useLayoutEffect} from 'react';
+import {View, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
+import Markdown from 'react-native-simple-markdown';
+import {theme} from '../../utils/theme';
 
 const Wrapper = styled.View`
   flex: 1;
-  background-color: ${({theme}) => theme.bg.light};
+  background-color: ${(props) => props.theme.bg.light};
+  padding: 10px;
+  padding-bottom: 0;
 `;
 
-const Text = styled.Text`
-  color: ${({theme}) => theme.fg};
+const TitleView = styled.View`
+  flex-direction: row;
+  margin-bottom: 10px;
+`;
+
+const Title = styled.Text`
+  color: ${(props) => props.theme.fg};
+  font-weight: bold;
+  margin-left: 10px;
+  font-size: 18px;
+`;
+
+const Date = styled.Text`
+  color: gray;
+  margin-left: 10px;
+`;
+
+const Logo = styled.Image`
+  width: 75px;
+  height: 75px;
 `;
 
 function EpisodeDetails({
@@ -22,7 +45,33 @@ function EpisodeDetails({
 
   return (
     <Wrapper>
-      <Text>{episode.title}</Text>
+      <TitleView>
+        <Logo
+          source={{
+            uri:
+              'https://require.podcast.gq/static/logo-802c736d140830acbc8cb1b0ee208e4a.png',
+          }}
+        />
+        <View style={{flex: 1}}>
+          <Date>{episode.publicationDate}</Date>
+          <Title>{episode.title}</Title>
+        </View>
+      </TitleView>
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <Markdown
+          styles={{
+            text: {color: theme.fg, fontFamily: 'monospace'},
+            inlineCode: {backgroundColor: theme.bg.lighter, color: theme.fg},
+            url: {
+              color: 'pink',
+            },
+            view: {
+              marginTop: 0,
+            },
+          }}>
+          {episode.description.markdown}
+        </Markdown>
+      </ScrollView>
     </Wrapper>
   );
 }
