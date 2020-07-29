@@ -26,7 +26,7 @@ const App = () => {
         inactiveTintColor: 'gray',
         style: {
           backgroundColor: theme.bg.medium,
-          borderTopColor: theme.bg.dark,
+          borderTopColor: theme.bg.medium,
         },
       }}>
       <Tab.Screen

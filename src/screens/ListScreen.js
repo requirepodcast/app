@@ -1,11 +1,19 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
+import EpisodesList from '../components/EpisodesList/EpisodesList';
+import {theme} from '../utils/theme';
+
+const Stack = createStackNavigator();
 
 function ListScreen() {
   return (
-    <View>
-      <Text>List</Text>
-    </View>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: theme.bg.medium},
+        headerTintColor: theme.fg,
+      }}>
+      <Stack.Screen name="Odcinki" component={EpisodesList} />
+    </Stack.Navigator>
   );
 }
 
