@@ -23,8 +23,7 @@ function EpisodeDetails({
         <Image
           style={styles.logo}
           source={{
-            uri:
-              'https://require.podcast.gq/static/logo-802c736d140830acbc8cb1b0ee208e4a.png',
+            uri: episode.audioUrl,
           }}
         />
         <View style={{flex: 1}}>
