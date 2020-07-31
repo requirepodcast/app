@@ -1,7 +1,7 @@
 import React, {useLayoutEffect} from 'react';
 import {View, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-import Markdown from 'react-native-simple-markdown';
+import Markdown from 'react-native-easy-markdown';
 import {theme} from '../../utils/theme';
 
 const Wrapper = styled.View`
@@ -41,6 +41,8 @@ function EpisodeDetails({
 }) {
   useLayoutEffect(() => {
     navigation.setOptions({title: episode.title});
+
+    console.log(episode.description.markdown);
   });
 
   return (
@@ -59,17 +61,29 @@ function EpisodeDetails({
       </TitleView>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <Markdown
-          styles={{
-            text: {color: theme.fg, fontFamily: 'monospace'},
-            inlineCode: {backgroundColor: theme.bg.lighter, color: theme.fg},
-            url: {
-              color: 'pink',
+          style={{
+            padding: 5,
+          }}
+          markdownStyles={{
+            text: {
+              color: theme.fg,
+              fontFamily: 'monospace',
             },
-            view: {
-              marginTop: 0,
+            link: {
+              color: theme.red,
+              textDecorationLine: 'underline',
+            },
+            listItemBullet: {
+              width: 4,
+              height: 4,
+              backgroundColor: 'white',
+              borderRadius: 2,
+              marginRight: 10,
             },
           }}>
-          {episode.description.markdown}
+          {episode.description.markdown.slice(0, 1) === '\n'
+            ? episode.description.markdown.slice(1)
+            : episode.description.markdown}
         </Markdown>
       </ScrollView>
     </Wrapper>
