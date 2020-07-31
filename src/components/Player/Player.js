@@ -1,11 +1,22 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {theme} from '../../utils/theme';
+import {useSelector} from 'react-redux';
 
 function Player() {
+  const {
+    player: {queuePosition},
+    episodes: {episodes},
+  } = useSelector((state) => state);
+  const episode = queuePosition
+    ? episodes[queuePosition]
+    : queuePosition === 0 && episodes[queuePosition];
+
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.text}>Player</Text>
+      <Text style={styles.text}>
+        {episode ? episode.title : 'Aktualnie nie odtwarzane'}
+      </Text>
     </View>
   );
 }

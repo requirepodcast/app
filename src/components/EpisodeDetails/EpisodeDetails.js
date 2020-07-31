@@ -31,6 +31,7 @@ function EpisodeDetails({
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <MarkdownView
           onLinkPress={(url) => Linking.openURL(url)}
+          style={{paddingHorizontal: 10}}
           styles={markdownStyles}>
           {episode.description.markdown.slice(0, 1) === '\n'
             ? episode.description.markdown.slice(1)
@@ -45,12 +46,13 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: theme.bg.light,
-    padding: 10,
+    paddingVertical: 10,
     paddingBottom: 0,
   },
   titleView: {
     flexDirection: 'row',
     marginBottom: 10,
+    paddingHorizontal: 10,
   },
   title: {
     color: theme.fg,

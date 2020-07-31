@@ -1,4 +1,4 @@
-import {takeEvery, put} from 'redux-saga/effects';
+import {takeEvery, put, all, call} from 'redux-saga/effects';
 
 function* getEpisodes() {
   const episodes = yield fetch(
@@ -8,6 +8,10 @@ function* getEpisodes() {
   yield put({type: 'EPISODES', episodes: episodes.episodes});
 }
 
-export function* episodesSaga() {
+function* episodesSaga() {
   yield takeEvery('GET_EPISODES', getEpisodes);
+}
+
+export function* rootSaga() {
+  yield all([call(episodesSaga)]);
 }
