@@ -1,6 +1,6 @@
 import React, {useLayoutEffect} from 'react';
-import {View, ScrollView, StyleSheet, Text, Image} from 'react-native';
-import Markdown from 'react-native-easy-markdown';
+import {View, ScrollView, StyleSheet, Text, Image, Linking} from 'react-native';
+import {MarkdownView} from 'react-native-markdown-view';
 import {theme} from '../../utils/theme';
 
 function EpisodeDetails({
@@ -29,31 +29,13 @@ function EpisodeDetails({
         </View>
       </View>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <Markdown
-          style={{
-            padding: 5,
-          }}
-          markdownStyles={{
-            text: {
-              color: theme.fg,
-              fontFamily: 'monospace',
-            },
-            link: {
-              color: theme.red,
-              textDecorationLine: 'underline',
-            },
-            listItemBullet: {
-              width: 4,
-              height: 4,
-              backgroundColor: 'white',
-              borderRadius: 2,
-              marginRight: 10,
-            },
-          }}>
+        <MarkdownView
+          onLinkPress={(url) => Linking.openURL(url)}
+          styles={markdownStyles}>
           {episode.description.markdown.slice(0, 1) === '\n'
             ? episode.description.markdown.slice(1)
             : episode.description.markdown}
-        </Markdown>
+        </MarkdownView>
       </ScrollView>
     </View>
   );
@@ -85,5 +67,54 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
 });
+
+const markdownStyles = {
+  link: {
+    color: theme.red,
+    textDecorationLine: 'underline',
+  },
+  paragraph: {
+    color: theme.fg,
+    fontFamily: 'monospace',
+    marginTop: 0,
+  },
+  heading: {
+    color: theme.fg,
+    fontFamily: 'monospace',
+    fontWeight: 'bold',
+  },
+  listItemUnorderedContent: {
+    color: theme.fg,
+    fontFamily: 'monospace',
+  },
+  listItemBullet: {
+    color: theme.fg,
+  },
+  inlineCode: {
+    fontFamily: 'monospace',
+    backgroundColor: theme.ligher,
+  },
+};
+
+/*
+
+
+            text: {
+              color: theme.fg,
+              fontFamily: 'monospace',
+            },
+            link: {
+              color: theme.red,
+              textDecorationLine: 'underline',
+            },
+            listItemBullet: {
+              width: 4,
+              height: 4,
+              backgroundColor: 'white',
+              borderRadius: 2,
+              marginRight: 10,
+            },
+
+            */
 
 export default EpisodeDetails;
