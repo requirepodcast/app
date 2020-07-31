@@ -2,16 +2,20 @@ import React, {useLayoutEffect} from 'react';
 import {View, ScrollView, StyleSheet, Text, Image, Linking} from 'react-native';
 import {MarkdownView} from 'react-native-markdown-view';
 import {theme} from '../../utils/theme';
+import PlayButton from '../PlayButton/PlayButton';
+import {useDispatch} from 'react-redux';
+import {playEpisode} from '../../store/actions/player';
 
 function EpisodeDetails({
   route: {
-    params: {episode},
+    params: {episode, queuePosition},
   },
   navigation,
 }) {
   useLayoutEffect(() => {
     navigation.setOptions({title: episode.title});
   });
+  const dispatch = useDispatch();
 
   return (
     <View style={styles.wrapper}>
@@ -28,6 +32,10 @@ function EpisodeDetails({
           <Text style={styles.title}>{episode.title}</Text>
         </View>
       </View>
+      <PlayButton
+        size="small"
+        onPress={() => dispatch(playEpisode(queuePosition))}
+      />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <MarkdownView
           onLinkPress={(url) => Linking.openURL(url)}

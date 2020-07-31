@@ -17,7 +17,10 @@ function ListenScreen() {
       <Text style={styles.description}>
         {episode && episode.shortDescription}
       </Text>
-      <PlayButton onPress={() => dispatch(playEpisode(episodes.length - 1))} />
+      <PlayButton
+        onPress={() => dispatch(playEpisode(episodes.length - 1))}
+        style="big"
+      />
     </SafeAreaView>
   );
 }

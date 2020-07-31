@@ -3,14 +3,14 @@ import {TouchableHighlight, StyleSheet, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {theme} from '../../utils/theme';
 
-function Item({episode}) {
+function Item({episode, queuePosition}) {
   const navigation = useNavigation();
 
   return (
     <TouchableHighlight
       underlayColor={theme.bg.lighter}
       activeOpacity={1}
-      onPress={() => navigation.navigate('Details', {episode})}>
+      onPress={() => navigation.navigate('Details', {episode, queuePosition})}>
       <Text style={styles.title}>{episode.title}</Text>
     </TouchableHighlight>
   );

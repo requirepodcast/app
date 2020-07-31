@@ -13,7 +13,9 @@ function EpisodeList() {
       <FlatList
         data={episodes.slice().reverse()}
         keyExtractor={(episode) => episode.id}
-        renderItem={({item}) => <Item episode={item} />}
+        renderItem={({item, index}) => (
+          <Item episode={item} queuePosition={episodes.length - 1 - index} />
+        )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
     </View>
