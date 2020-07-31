@@ -1,29 +1,36 @@
 import React from 'react';
-import {FlatList} from 'react-native';
-import styled from 'styled-components/native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Item from './Item';
-import ItemSeparator from './ItemSeparator';
-
-const Wrapper = styled.View`
-  flex: 1;
-  background-color: ${({theme}) => theme.bg.light};
-`;
+import {theme} from '../../utils/theme';
 
 function EpisodeList() {
   const episodes = useSelector((store) => store.episodes).reverse();
 
   return (
-    <Wrapper>
+    <View style={styles.wrapper}>
       <FlatList
         data={episodes}
         keyExtractor={(episode) => episode.id}
         renderItem={({item}) => <Item episode={item} />}
-        ItemSeparatorComponent={ItemSeparator}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
-    </Wrapper>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: theme.bg.light,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: theme.bg.dark,
+    marginHorizontal: 10,
+    marginVertical: 0,
+  },
+});
 
 export default EpisodeList;

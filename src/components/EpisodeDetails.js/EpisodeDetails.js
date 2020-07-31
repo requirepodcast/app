@@ -1,37 +1,7 @@
 import React, {useLayoutEffect} from 'react';
-import {View, ScrollView} from 'react-native';
-import styled from 'styled-components/native';
+import {View, ScrollView, StyleSheet, Text, Image} from 'react-native';
 import Markdown from 'react-native-easy-markdown';
 import {theme} from '../../utils/theme';
-
-const Wrapper = styled.View`
-  flex: 1;
-  background-color: ${(props) => props.theme.bg.light};
-  padding: 10px;
-  padding-bottom: 0;
-`;
-
-const TitleView = styled.View`
-  flex-direction: row;
-  margin-bottom: 10px;
-`;
-
-const Title = styled.Text`
-  color: ${(props) => props.theme.fg};
-  font-weight: bold;
-  margin-left: 10px;
-  font-size: 18px;
-`;
-
-const Date = styled.Text`
-  color: gray;
-  margin-left: 10px;
-`;
-
-const Logo = styled.Image`
-  width: 75px;
-  height: 75px;
-`;
 
 function EpisodeDetails({
   route: {
@@ -41,24 +11,23 @@ function EpisodeDetails({
 }) {
   useLayoutEffect(() => {
     navigation.setOptions({title: episode.title});
-
-    console.log(episode.description.markdown);
   });
 
   return (
-    <Wrapper>
-      <TitleView>
-        <Logo
+    <View style={styles.wrapper}>
+      <View style={styles.titleView}>
+        <Image
+          style={styles.logo}
           source={{
             uri:
               'https://require.podcast.gq/static/logo-802c736d140830acbc8cb1b0ee208e4a.png',
           }}
         />
         <View style={{flex: 1}}>
-          <Date>{episode.publicationDate}</Date>
-          <Title>{episode.title}</Title>
+          <Text style={styles.date}>{episode.publicationDate}</Text>
+          <Text style={styles.title}>{episode.title}</Text>
         </View>
-      </TitleView>
+      </View>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <Markdown
           style={{
@@ -86,8 +55,35 @@ function EpisodeDetails({
             : episode.description.markdown}
         </Markdown>
       </ScrollView>
-    </Wrapper>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: theme.bg.light,
+    padding: 10,
+    paddingBottom: 0,
+  },
+  titleView: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  title: {
+    color: theme.fg,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    fontSize: 18,
+  },
+  logo: {
+    width: 75,
+    height: 75,
+  },
+  date: {
+    color: 'gray',
+    marginLeft: 10,
+  },
+});
 
 export default EpisodeDetails;
