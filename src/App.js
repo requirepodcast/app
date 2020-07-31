@@ -10,6 +10,7 @@ import {theme} from './utils/theme';
 import {useMount} from './utils/useMount';
 import {getEpisodes} from './store/actions/episodes';
 import EpisodesScreen from './screens/EpisodesScreen';
+import TabBar from './components/TabBar/TabBar';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,7 +32,8 @@ const App = () => {
             backgroundColor: theme.bg.medium,
             borderTopColor: theme.bg.medium,
           },
-        }}>
+        }}
+        tabBar={TabBar}>
         <Tab.Screen
           name="Słuchaj"
           component={ListenScreen}

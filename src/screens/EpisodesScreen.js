@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/stack';
 import EpisodesList from '../components/EpisodesList/EpisodesList';
 import {theme} from '../utils/theme';
-import EpisodeDetails from '../components/EpisodeDetails.js/EpisodeDetails';
+import EpisodeDetails from '../components/EpisodeDetails/EpisodeDetails';
 
 const Stack = createStackNavigator();
 

@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg.light,
   },
   separator: {
-    height: 1,
+    height: StyleSheet.hairlineWidth,
     backgroundColor: theme.bg.dark,
     marginHorizontal: 10,
     marginVertical: 0,
