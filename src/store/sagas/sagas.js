@@ -1,4 +1,4 @@
-import {takeEvery, put, all, call} from 'redux-saga/effects';
+import {takeEvery, put, all, call, select} from 'redux-saga/effects';
 
 function* getEpisodes() {
   const episodes = yield fetch(
@@ -12,6 +12,15 @@ function* episodesSaga() {
   yield takeEvery('GET_EPISODES', getEpisodes);
 }
 
+function* seek({to}) {
+  const {seekFunc} = yield select((state) => state.player);
+  seekFunc(to);
+}
+
+function* seekSaga() {
+  yield takeEvery('SEEK', seek);
+}
+
 export function* rootSaga() {
-  yield all([call(episodesSaga)]);
+  yield all([call(episodesSaga), call(seekSaga)]);
 }

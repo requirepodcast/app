@@ -6,16 +6,27 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MusicControl from 'react-native-music-control';
 
 import {theme} from '../../utils/theme';
-import {pausePlaying, resumePlaying} from '../../store/actions/player';
+import {
+  pausePlaying,
+  resumePlaying,
+  setProgress,
+  setDuration,
+  seekFunc,
+  seek,
+  clean,
+} from '../../store/actions/player';
 import PlayerWrapper from './PlayerWrapper';
 import logo from '../../images/RequireLogo.png';
+import {setupMusicControl} from '../../utils/setupMusicControl';
+
+setupMusicControl();
 
 function Player() {
   const dispatch = useDispatch();
   const playerRef = useRef();
 
   const {
-    player: {queuePosition, isPlaying, isPaused},
+    player: {queuePosition, isPlaying, isPaused, progress},
     episodes: {episodes},
   } = useSelector((state) => state);
 
@@ -23,17 +34,7 @@ function Player() {
     ? episodes[queuePosition]
     : queuePosition === 0 && episodes[queuePosition];
 
-  function setupControls(data) {
-    MusicControl.enableControl('play', true);
-    MusicControl.enableControl('pause', true);
-    MusicControl.enableControl('stop', false);
-    MusicControl.enableControl('nextTrack', false);
-    MusicControl.enableControl('previousTrack', false);
-    MusicControl.enableControl('changePlaybackPosition', true);
-    MusicControl.enableControl('seek', true);
-    MusicControl.enableControl('skipForward', false);
-    MusicControl.enableControl('skipBackward', false);
-
+  function onLoad(data) {
     MusicControl.setNowPlaying({
       title: episode.title,
       artwork: logo,
@@ -50,8 +51,11 @@ function Player() {
     });
 
     MusicControl.on('seek', (val) => {
-      playerRef.current.seek(val);
+      dispatch(seek(val));
     });
+
+    dispatch(seekFunc(playerRef.current.seek));
+    dispatch(setDuration(data.duration));
   }
 
   useEffect(() => {
@@ -60,15 +64,10 @@ function Player() {
         state: isPaused
           ? MusicControl.STATE_PAUSED
           : MusicControl.STATE_PLAYING,
+        elapsedTime: progress,
       });
     }
   });
-
-  function onProgress(data) {
-    MusicControl.updatePlayback({
-      elapsedTime: data.currentTime,
-    });
-  }
 
   return (
     <PlayerWrapper>
@@ -81,8 +80,9 @@ function Player() {
             paused={isPaused}
             playInBackground={true}
             playWhenInactive={true}
-            onLoad={setupControls}
-            onProgress={onProgress}
+            onLoad={onLoad}
+            onProgress={(data) => dispatch(setProgress(data.currentTime))}
+            onEnd={() => dispatch(clean())}
             ref={playerRef}
           />
         )}
