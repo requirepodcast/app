@@ -6,6 +6,8 @@ import PlayButton from '../PlayButton/PlayButton';
 import {useDispatch} from 'react-redux';
 import {playEpisode} from '../../store/actions/player';
 
+import logo from '../../images/RequireLogo.png';
+
 function EpisodeDetails({
   route: {
     params: {episode, queuePosition},
@@ -20,12 +22,7 @@ function EpisodeDetails({
   return (
     <View style={styles.wrapper}>
       <View style={styles.titleView}>
-        <Image
-          style={styles.logo}
-          source={{
-            uri: episode.audioUrl,
-          }}
-        />
+        <Image style={styles.logo} source={logo} />
         <View style={{flex: 1}}>
           <Text style={styles.date}>{episode.publicationDate}</Text>
           <Text style={styles.title}>{episode.title}</Text>

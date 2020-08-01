@@ -5614,6 +5614,11 @@ react-native-markdown-view@^1.1.4:
     react-native-tabular-grid-markdown-view "0.1.x"
     simple-markdown "0.3.x"
 
+react-native-music-control@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/react-native-music-control/-/react-native-music-control-0.12.0.tgz#aa63864f2f056f1e47928eebbc7880e3c00fc88b"
+  integrity sha512-+NK4cFSQ3teciEXutlb1sav7YUgZaYbjnY6uAozA3A+F9F2jAOpDfw1YAko7kzNqpRR35xov3S7Ql3Alq7kJtA==
+
 react-native-reanimated@^1.10.1:
   version "1.10.1"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.10.1.tgz#82e79ae119e97b282ce53d16bc6db9765a56b22b"
