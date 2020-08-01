@@ -4,6 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MusicControl from 'react-native-music-control';
+import {useNavigation} from '@react-navigation/native';
 
 import {theme} from '../../utils/theme';
 import {
@@ -15,7 +16,6 @@ import {
   seek,
   clean,
 } from '../../store/actions/player';
-import PlayerWrapper from './PlayerWrapper';
 import logo from '../../images/RequireLogo.png';
 import {setupMusicControl} from '../../utils/setupMusicControl';
 
@@ -24,6 +24,7 @@ setupMusicControl();
 function Player() {
   const dispatch = useDispatch();
   const playerRef = useRef();
+  const {navigate} = useNavigation();
 
   const {
     player: {queuePosition, isPlaying, isPaused, progress},
@@ -70,39 +71,46 @@ function Player() {
   });
 
   return (
-    <PlayerWrapper>
-      <View style={styles.half}>
-        {episode && (
-          <Video
-            source={{
-              uri: episode.audioUrl,
-            }}
-            paused={isPaused}
-            playInBackground={true}
-            playWhenInactive={true}
-            onLoad={onLoad}
-            onProgress={(data) => dispatch(setProgress(data.currentTime))}
-            onEnd={() => dispatch(clean())}
-            ref={playerRef}
-          />
-        )}
-        <Text style={styles.text}>
-          {episode ? episode.title : 'Aktualnie nie odtwarzane'}
-        </Text>
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={() => navigate('PlayerModal')}
+      disabled={!isPlaying}>
+      <View style={styles.wrapper}>
+        <View style={styles.half}>
+          {episode && (
+            <Video
+              source={{
+                uri: episode.audioUrl,
+              }}
+              paused={isPaused}
+              playInBackground={true}
+              playWhenInactive={true}
+              onLoad={onLoad}
+              onProgress={(data) => dispatch(setProgress(data.currentTime))}
+              onEnd={() => dispatch(clean())}
+              ref={playerRef}
+            />
+          )}
+          <Text style={styles.text}>
+            {episode ? episode.title : 'Aktualnie nie odtwarzane'}
+          </Text>
+        </View>
+        <View style={styles.half}>
+          <TouchableOpacity
+            style={styles.controlButton}
+            disabled={!isPlaying}
+            onPress={() =>
+              dispatch(isPaused ? resumePlaying() : pausePlaying())
+            }>
+            <Icon
+              name={isPaused ? 'play' : 'pause'}
+              color={isPlaying ? theme.fg : 'grey'}
+              size={16}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.half}>
-        <TouchableOpacity
-          style={styles.controlButton}
-          disabled={!isPlaying}
-          onPress={() => dispatch(isPaused ? resumePlaying() : pausePlaying())}>
-          <Icon
-            name={isPaused ? 'play' : 'pause'}
-            color={isPlaying ? theme.fg : 'grey'}
-            size={16}
-          />
-        </TouchableOpacity>
-      </View>
-    </PlayerWrapper>
+    </TouchableOpacity>
   );
 }
 
@@ -115,6 +123,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   half: {
     flexDirection: 'row',

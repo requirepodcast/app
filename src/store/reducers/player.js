@@ -32,8 +32,6 @@ function reducer(
       return {...state, duration: action.duration};
     case 'SEEK_FUNC':
       return {...state, seekFunc: action.func};
-    case 'SEEK':
-      return {...state, progress: action.to};
     case 'CLEAN':
       return {
         queuePosition: null,
