@@ -1,21 +1,28 @@
-import React, {useLayoutEffect} from 'react';
-import {View, ScrollView, StyleSheet, Text, Image, Linking} from 'react-native';
-import {MarkdownView} from 'react-native-markdown-view';
-import {theme} from '../../utils/theme';
+import React, { useLayoutEffect } from 'react';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  Image,
+  Linking,
+} from 'react-native';
+import { MarkdownView } from 'react-native-markdown-view';
+import { theme } from '../../utils/theme';
 import PlayButton from '../PlayButton/PlayButton';
-import {useDispatch} from 'react-redux';
-import {playEpisode} from '../../store/actions/player';
+import { useDispatch } from 'react-redux';
+import { playEpisode } from '../../store/actions/player';
 
 import logo from '../../images/RequireLogo.png';
 
 function EpisodeDetails({
   route: {
-    params: {episode, queuePosition},
+    params: { episode, queuePosition },
   },
   navigation,
 }) {
   useLayoutEffect(() => {
-    navigation.setOptions({title: episode.title});
+    navigation.setOptions({ title: episode.title });
   });
   const dispatch = useDispatch();
 
@@ -23,7 +30,7 @@ function EpisodeDetails({
     <View style={styles.wrapper}>
       <View style={styles.titleView}>
         <Image style={styles.logo} source={logo} />
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Text style={styles.date}>{episode.publicationDate}</Text>
           <Text style={styles.title}>{episode.title}</Text>
         </View>
@@ -34,9 +41,10 @@ function EpisodeDetails({
       />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <MarkdownView
-          onLinkPress={(url) => Linking.openURL(url)}
-          style={{paddingHorizontal: 10}}
-          styles={markdownStyles}>
+          onLinkPress={url => Linking.openURL(url)}
+          style={{ paddingHorizontal: 10 }}
+          styles={markdownStyles}
+        >
           {episode.description.markdown.slice(0, 1) === '\n'
             ? episode.description.markdown.slice(1)
             : episode.description.markdown}

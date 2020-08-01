@@ -1,11 +1,11 @@
-import React, {useEffect} from 'react';
-import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
-import {useSelector, useDispatch} from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
 import Slider from '@react-native-community/slider';
-import {theme} from '../../utils/theme';
-import {getEpisode} from '../../utils/getEpisode';
+import { theme } from '../../utils/theme';
+import { getEpisode } from '../../utils/getEpisode';
 import ControlButton from './ControlButton';
 import {
   resumePlaying,
@@ -22,8 +22,8 @@ function PlayerModal() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {
-    player: {queuePosition, isPaused, progress, duration, isPlaying},
-    episodes: {episodes},
+    player: { queuePosition, isPaused, progress, duration, isPlaying },
+    episodes: { episodes },
   } = useSelector((state) => state);
 
   const episode = getEpisode(queuePosition, episodes);
@@ -45,7 +45,8 @@ function PlayerModal() {
     <View style={styles.wrapper}>
       <TouchableOpacity
         style={styles.closeButton}
-        onPress={() => navigation.goBack()}>
+        onPress={() => navigation.goBack()}
+      >
         <Icon name="close" size={25} color={theme.fg} />
       </TouchableOpacity>
       {episode && (

@@ -21,17 +21,17 @@ function reducer(
             duration: 0,
             seekFunc: () => {},
           }
-        : {...state};
+        : { ...state };
     case 'RESUME_PLAYING':
-      return {...state, isPaused: false};
+      return { ...state, isPaused: false };
     case 'PAUSE_PLAYING':
-      return {...state, isPaused: true};
+      return { ...state, isPaused: true };
     case 'SET_PROGRESS':
-      return {...state, progress: action.progress};
+      return { ...state, progress: action.progress };
     case 'SET_DURATION':
-      return {...state, duration: action.duration};
+      return { ...state, duration: action.duration };
     case 'SEEK_FUNC':
-      return {...state, seekFunc: action.func};
+      return { ...state, seekFunc: action.func };
     case 'CLEAN':
       return {
         queuePosition: null,

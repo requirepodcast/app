@@ -1,14 +1,14 @@
 import React from 'react';
-import {StyleSheet, Text, SafeAreaView} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import { StyleSheet, Text, SafeAreaView } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
 import PlayButton from '../components/PlayButton/PlayButton';
-import {theme} from '../utils/theme';
-import {playEpisode} from '../store/actions/player';
+import { theme } from '../utils/theme';
+import { playEpisode } from '../store/actions/player';
 
 function ListenScreen() {
   const dispatch = useDispatch();
-  const episodes = useSelector((store) => store.episodes.episodes);
+  const episodes = useSelector(store => store.episodes.episodes);
   const episode = episodes.slice(-1)[0];
 
   return (

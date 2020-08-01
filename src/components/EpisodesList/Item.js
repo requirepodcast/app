@@ -1,16 +1,17 @@
 import React from 'react';
-import {TouchableHighlight, StyleSheet, Text} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {theme} from '../../utils/theme';
+import { TouchableHighlight, StyleSheet, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { theme } from '../../utils/theme';
 
-function Item({episode, queuePosition}) {
+function Item({ episode, queuePosition }) {
   const navigation = useNavigation();
 
   return (
     <TouchableHighlight
       underlayColor={theme.bg.lighter}
       activeOpacity={1}
-      onPress={() => navigation.navigate('Details', {episode, queuePosition})}>
+      onPress={() => navigation.navigate('Details', { episode, queuePosition })}
+    >
       <Text style={styles.title}>{episode.title}</Text>
     </TouchableHighlight>
   );

@@ -1,9 +1,9 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet} from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {theme} from '../../utils/theme';
+import { theme } from '../../utils/theme';
 
-function SeekButton({onPress, name}) {
+function SeekButton({ onPress, name }) {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
       <Icon style={styles.button} name={name} />

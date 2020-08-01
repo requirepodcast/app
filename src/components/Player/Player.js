@@ -1,12 +1,12 @@
-import React, {useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MusicControl from 'react-native-music-control';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-import {theme} from '../../utils/theme';
+import { theme } from '../../utils/theme';
 import {
   pausePlaying,
   resumePlaying,
@@ -17,18 +17,18 @@ import {
   clean,
 } from '../../store/actions/player';
 import logo from '../../images/RequireLogo.png';
-import {setupMusicControl} from '../../utils/setupMusicControl';
+import { setupMusicControl } from '../../utils/setupMusicControl';
 
 setupMusicControl();
 
 function Player() {
   const dispatch = useDispatch();
   const playerRef = useRef();
-  const {navigate} = useNavigation();
+  const { navigate } = useNavigation();
 
   const {
-    player: {queuePosition, isPlaying, isPaused, progress},
-    episodes: {episodes},
+    player: { queuePosition, isPlaying, isPaused, progress },
+    episodes: { episodes },
   } = useSelector((state) => state);
 
   const episode = queuePosition
@@ -74,7 +74,8 @@ function Player() {
     <TouchableOpacity
       activeOpacity={0.9}
       onPress={() => navigate('PlayerModal')}
-      disabled={!isPlaying}>
+      disabled={!isPlaying}
+    >
       <View style={styles.wrapper}>
         <View style={styles.half}>
           {episode && (
@@ -101,7 +102,8 @@ function Player() {
             disabled={!isPlaying}
             onPress={() =>
               dispatch(isPaused ? resumePlaying() : pausePlaying())
-            }>
+            }
+          >
             <Icon
               name={isPaused ? 'play' : 'pause'}
               color={isPlaying ? theme.fg : 'grey'}

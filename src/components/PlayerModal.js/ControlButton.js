@@ -1,9 +1,9 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet} from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {theme} from '../../utils/theme';
+import { theme } from '../../utils/theme';
 
-function ControlButton({onPress, isPaused}) {
+function ControlButton({ onPress, isPaused }) {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
       <Icon style={styles.button} name={isPaused ? 'play' : 'pause'} />

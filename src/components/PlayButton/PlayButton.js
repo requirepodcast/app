@@ -1,9 +1,9 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Text} from 'react-native';
+import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {theme} from '../../utils/theme';
+import { theme } from '../../utils/theme';
 
-function PlayButton({onPress, style}) {
+function PlayButton({ onPress, style }) {
   let buttonStyles;
 
   switch (style) {
