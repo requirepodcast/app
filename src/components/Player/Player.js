@@ -14,7 +14,7 @@ import {
   setDuration,
   seekFunc,
   seek,
-  clean,
+  cleanup,
 } from '../../store/actions/player';
 import logo from '../../images/RequireLogo.png';
 import { setupMusicControl } from '../../utils/setupMusicControl';
@@ -94,7 +94,7 @@ function Player() {
                 playWhenInactive={true}
                 onLoad={onLoad}
                 onProgress={(data) => dispatch(setProgress(data.currentTime))}
-                onEnd={() => dispatch(clean())}
+                onEnd={() => dispatch(cleanup())}
                 ref={playerRef}
                 muted={!loaded}
               />

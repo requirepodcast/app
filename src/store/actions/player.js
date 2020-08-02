@@ -29,6 +29,6 @@ export function seek(to) {
   return { type: 'SEEK', to };
 }
 
-export function clean() {
-  return { type: 'CLEAN' };
+export function cleanup() {
+  return { type: 'CLEANUP' };
 }
