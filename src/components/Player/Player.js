@@ -18,6 +18,7 @@ import {
 } from '../../store/actions/player';
 import logo from '../../images/RequireLogo.png';
 import { setupMusicControl } from '../../utils/setupMusicControl';
+import Progress from './Progress';
 
 setupMusicControl();
 
@@ -27,13 +28,16 @@ function Player() {
   const { navigate } = useNavigation();
 
   const {
-    player: { queuePosition, isPlaying, isPaused, progress },
+    player: { queuePosition, isPlaying, isPaused, progress, duration },
     episodes: { episodes },
   } = useSelector((state) => state);
 
   const episode = queuePosition
     ? episodes[queuePosition]
     : queuePosition === 0 && episodes[queuePosition];
+
+  const progressFraction =
+    Math.round((progress / duration + Number.EPSILON) * 1000) / 1000;
 
   function onLoad(data) {
     MusicControl.setNowPlaying({
@@ -71,55 +75,56 @@ function Player() {
   });
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.9}
-      onPress={() => navigate('PlayerModal')}
-      disabled={!isPlaying}
-    >
-      <View style={styles.wrapper}>
-        <View style={styles.half}>
-          {episode && (
-            <Video
-              source={{
-                uri: episode.audioUrl,
-              }}
-              paused={isPaused}
-              playInBackground={true}
-              playWhenInactive={true}
-              onLoad={onLoad}
-              onProgress={(data) => dispatch(setProgress(data.currentTime))}
-              onEnd={() => dispatch(clean())}
-              ref={playerRef}
-            />
-          )}
-          <Text style={styles.text}>
-            {episode ? episode.title : 'Aktualnie nie odtwarzane'}
-          </Text>
+    <>
+      <Progress progress={progressFraction} />
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() => navigate('PlayerModal')}
+        disabled={!isPlaying}
+      >
+        <View style={styles.wrapper}>
+          <View style={styles.half}>
+            {episode && (
+              <Video
+                source={{
+                  uri: episode.audioUrl,
+                }}
+                paused={isPaused}
+                playInBackground={true}
+                playWhenInactive={true}
+                onLoad={onLoad}
+                onProgress={(data) => dispatch(setProgress(data.currentTime))}
+                onEnd={() => dispatch(clean())}
+                ref={playerRef}
+              />
+            )}
+            <Text style={styles.text}>
+              {episode ? episode.title : 'Aktualnie nie odtwarzane'}
+            </Text>
+          </View>
+          <View style={styles.half}>
+            <TouchableOpacity
+              style={styles.controlButton}
+              disabled={!isPlaying}
+              onPress={() =>
+                dispatch(isPaused ? resumePlaying() : pausePlaying())
+              }
+            >
+              <Icon
+                name={isPaused ? 'play' : 'pause'}
+                color={isPlaying ? theme.fg : 'grey'}
+                size={16}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.half}>
-          <TouchableOpacity
-            style={styles.controlButton}
-            disabled={!isPlaying}
-            onPress={() =>
-              dispatch(isPaused ? resumePlaying() : pausePlaying())
-            }
-          >
-            <Icon
-              name={isPaused ? 'play' : 'pause'}
-              color={isPlaying ? theme.fg : 'grey'}
-              size={16}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {
-    paddingVertical: 14,
-    paddingHorizontal: 10,
     backgroundColor: theme.bg.medium,
     borderBottomColor: theme.bg.dark,
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -131,12 +136,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   text: {
+    paddingVertical: 14,
+    paddingHorizontal: 10,
     color: theme.fg,
     fontSize: 14,
   },
   controlButton: {
     alignItems: 'center',
     height: '100%',
+    paddingVertical: 14,
+    paddingHorizontal: 10,
   },
 });
 
