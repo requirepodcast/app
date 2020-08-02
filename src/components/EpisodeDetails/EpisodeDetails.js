@@ -41,7 +41,7 @@ function EpisodeDetails({
       />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <MarkdownView
-          onLinkPress={url => Linking.openURL(url)}
+          onLinkPress={(url) => Linking.openURL(url)}
           style={{ paddingHorizontal: 10 }}
           styles={markdownStyles}
         >
@@ -108,27 +108,14 @@ const markdownStyles = {
     fontFamily: 'monospace',
     backgroundColor: theme.ligher,
   },
+  heading2: {
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  heading3: {
+    marginTop: 5,
+    marginBottom: 5,
+  },
 };
-
-/*
-
-
-            text: {
-              color: theme.fg,
-              fontFamily: 'monospace',
-            },
-            link: {
-              color: theme.red,
-              textDecorationLine: 'underline',
-            },
-            listItemBullet: {
-              width: 4,
-              height: 4,
-              backgroundColor: 'white',
-              borderRadius: 2,
-              marginRight: 10,
-            },
-
-            */
 
 export default EpisodeDetails;
