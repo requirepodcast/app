@@ -28,7 +28,7 @@ function Player() {
   const { navigate } = useNavigation();
 
   const {
-    player: { queuePosition, isPlaying, isPaused, progress, duration },
+    player: { queuePosition, isPlaying, isPaused, progress, duration, loaded },
     episodes: { episodes },
   } = useSelector((state) => state);
 
@@ -76,11 +76,11 @@ function Player() {
 
   return (
     <>
-      <Progress progress={progressFraction} />
+      <Progress progress={loaded ? progressFraction : 1} />
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => navigate('PlayerModal')}
-        disabled={!isPlaying}
+        disabled={!loaded}
       >
         <View style={styles.wrapper}>
           <View style={styles.half}>
@@ -96,6 +96,7 @@ function Player() {
                 onProgress={(data) => dispatch(setProgress(data.currentTime))}
                 onEnd={() => dispatch(clean())}
                 ref={playerRef}
+                muted={!loaded}
               />
             )}
             <Text style={styles.text}>
@@ -105,14 +106,14 @@ function Player() {
           <View style={styles.half}>
             <TouchableOpacity
               style={styles.controlButton}
-              disabled={!isPlaying}
+              disabled={!loaded}
               onPress={() =>
                 dispatch(isPaused ? resumePlaying() : pausePlaying())
               }
             >
               <Icon
                 name={isPaused ? 'play' : 'pause'}
-                color={isPlaying ? theme.fg : 'grey'}
+                color={loaded ? theme.fg : 'grey'}
                 size={16}
               />
             </TouchableOpacity>

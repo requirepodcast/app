@@ -5,7 +5,8 @@ function reducer(
     isPaused: true,
     progress: 0,
     duration: 0,
-    seekFunc: () => {},
+    seekFunc: null,
+    loaded: false,
   },
   action,
 ) {
@@ -19,7 +20,8 @@ function reducer(
             isPaused: false,
             progress: 0,
             duration: 0,
-            seekFunc: () => {},
+            seekFunc: null,
+            loaded: false,
           }
         : { ...state };
     case 'RESUME_PLAYING':
@@ -32,6 +34,8 @@ function reducer(
       return { ...state, duration: action.duration };
     case 'SEEK_FUNC':
       return { ...state, seekFunc: action.func };
+    case 'LOADED':
+      return { ...state, loaded: true };
     case 'CLEAN':
       return {
         queuePosition: null,
@@ -39,7 +43,8 @@ function reducer(
         isPaused: true,
         progress: 0,
         duration: 0,
-        seekFunc: () => {},
+        seekFunc: null,
+        loaded: false,
       };
     default:
       return state;

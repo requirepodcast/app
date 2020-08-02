@@ -3,3 +3,10 @@ export function getEpisodes() {
     type: 'GET_EPISODES',
   };
 }
+
+export function episodes(episodesArray) {
+  return {
+    type: 'EPISODES',
+    episodes: episodesArray,
+  };
+}
