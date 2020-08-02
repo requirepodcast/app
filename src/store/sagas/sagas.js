@@ -40,7 +40,7 @@ function* progress({ progress: episodeProgress }) {
 }
 
 function* progressSaga() {
-  yield throttle(10000, 'SET_PROGRESS', progress);
+  yield throttle(1000, 'SET_PROGRESS', progress);
 }
 
 function* playEpisode() {
@@ -61,11 +61,22 @@ function* playEpisodeSaga() {
   yield takeEvery('SEEK_FUNC', playEpisode);
 }
 
+function* clean() {
+  const { queuePosition } = yield select((state) => state.player);
+  yield AsyncStorage.setItem(`progress_${queuePosition}`, '');
+  yield put({ type: 'CLEAN' });
+}
+
+function* cleanSaga() {
+  yield takeEvery('CLEANUP', clean);
+}
+
 export function* rootSaga() {
   yield all([
     call(episodesSaga),
     call(seekSaga),
     call(progressSaga),
     call(playEpisodeSaga),
+    call(cleanSaga),
   ]);
 }
