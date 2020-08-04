@@ -8,8 +8,8 @@ function* getEpisodes() {
     'https://require.podcast.gq/episodes.json',
   ).then((res) => res.json());
 
-  yield TrackPlayer.setupPlayer();
-  yield TrackPlayer.add(episodesToQueue(episodes));
+  // yield TrackPlayer.setupPlayer();
+  // yield TrackPlayer.add(episodesToQueue(episodes));
   yield put(episodesAction(episodes));
 }
 
