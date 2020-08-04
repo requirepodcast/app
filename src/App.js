@@ -19,14 +19,13 @@ import TabBar from './components/TabBar/TabBar';
 
 import { rootSaga } from './store/sagas/sagas';
 import episodes from './store/reducers/episodes';
-import player from './store/reducers/player';
 import PlayerModal from './components/PlayerModal.js/PlayerModal';
 
 // Redux store
 const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(
-  combineReducers({ episodes, player }),
+  combineReducers({ episodes }),
   applyMiddleware(sagaMiddleware),
 );
 
@@ -47,7 +46,7 @@ function Main() {
           borderTopColor: theme.bg.medium,
         },
       }}
-      tabBar={props => <TabBar {...props} />}
+      tabBar={(props) => <TabBar {...props} />}
     >
       <Tab.Screen
         name="Słuchaj"

@@ -1,17 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector, useDispatch } from 'react-redux';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../utils/theme';
-import { getEpisode } from '../../utils/getEpisode';
 import ControlButton from './ControlButton';
-import {
-  resumePlaying,
-  pausePlaying,
-  seek as seekTo,
-} from '../../store/actions/player';
 import SeekButton from './SeekButton';
 
 function formatProgress(progress) {
@@ -20,26 +13,6 @@ function formatProgress(progress) {
 
 function PlayerModal() {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const {
-    player: { queuePosition, isPaused, progress, duration, isPlaying },
-    episodes: { episodes },
-  } = useSelector((state) => state);
-
-  const episode = getEpisode(queuePosition, episodes);
-
-  function seek(by) {
-    dispatch(seekTo(progress + by));
-  }
-
-  const progressFraction =
-    Math.round((progress / duration + Number.EPSILON) * 1000) / 1000;
-
-  useEffect(() => {
-    if (!isPlaying) {
-      navigation.goBack();
-    }
-  });
 
   return (
     <View style={styles.wrapper}>
@@ -49,35 +22,25 @@ function PlayerModal() {
       >
         <Icon name="close" size={25} color={theme.fg} />
       </TouchableOpacity>
-      {episode && (
-        <>
-          <Text style={styles.title}>{episode.title}</Text>
-          <View style={styles.controlButtons}>
-            <SeekButton onPress={() => seek(-10)} name="replay-10" />
-            <ControlButton
-              onPress={() =>
-                dispatch(isPaused ? resumePlaying() : pausePlaying())
-              }
-              isPaused={isPaused}
-            />
-            <SeekButton onPress={() => seek(10)} name="forward-10" />
-          </View>
-          <Slider
-            style={styles.slider}
-            maximumTrackTintColor={'grey'}
-            minimumTrackTintColor={theme.red}
-            thumbTintColor={theme.red}
-            value={progressFraction}
-            onSlidingComplete={(val) => dispatch(seekTo(val * duration))}
-          />
-          <View style={styles.timerWrapper}>
-            <Text style={styles.timer}>{formatProgress(progress)}</Text>
-            <Text style={styles.timer}>
-              -{formatProgress(duration - progress)}
-            </Text>
-          </View>
-        </>
-      )}
+      <>
+        <Text style={styles.title}>episode title</Text>
+        <View style={styles.controlButtons}>
+          <SeekButton onPress={() => console.log('dupa')} name="replay-10" />
+          <ControlButton onPress={() => console.log('dupa')} isPaused={true} />
+          <SeekButton onPress={() => console.log('duopa')} name="forward-10" />
+        </View>
+        <Slider
+          style={styles.slider}
+          maximumTrackTintColor={'grey'}
+          minimumTrackTintColor={theme.red}
+          thumbTintColor={theme.red}
+          value={0.5}
+        />
+        <View style={styles.timerWrapper}>
+          <Text style={styles.timer}>{formatProgress(0)}</Text>
+          <Text style={styles.timer}>-{formatProgress(0)}</Text>
+        </View>
+      </>
     </View>
   );
 }

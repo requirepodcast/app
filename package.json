@@ -24,6 +24,7 @@
     "react-native-reanimated": "^1.10.1",
     "react-native-safe-area-context": "^3.1.1",
     "react-native-screens": "^2.9.0",
+    "react-native-track-player": "^1.2.3",
     "react-native-vector-icons": "^7.0.0",
     "react-native-video": "^4.4.5",
     "react-redux": "^7.2.1",
