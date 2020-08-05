@@ -23,7 +23,10 @@ export function playEpisode(e) {
       episodes: { episodes },
     } = store.getState();
 
-    console.log(episodes[e]);
+    TrackPlayer.reset();
+    TrackPlayer.add(episodesToQueue(episodes));
+    TrackPlayer.skip(e.id);
+    TrackPlayer.play();
   });
 }
 

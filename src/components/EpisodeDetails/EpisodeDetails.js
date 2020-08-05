@@ -12,6 +12,7 @@ import { theme } from '../../utils/theme';
 import PlayButton from '../PlayButton/PlayButton';
 
 import logo from '../../images/RequireLogo.png';
+import { playEpisode } from '../../player';
 
 function EpisodeDetails({
   route: {
@@ -32,7 +33,7 @@ function EpisodeDetails({
           <Text style={styles.title}>{episode.title}</Text>
         </View>
       </View>
-      <PlayButton size="small" onPress={() => console.log('dupa')} />
+      <PlayButton size="small" onPress={() => playEpisode(episode)} />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <MarkdownView
           onLinkPress={(url) => Linking.openURL(url)}
