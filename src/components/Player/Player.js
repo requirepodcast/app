@@ -41,6 +41,12 @@ function Player() {
     },
   );
 
+  const disabled =
+    !playbackState ||
+    (playbackState !== STATE_PAUSED && playbackState !== STATE_PLAYING);
+
+  const playing = playbackState === STATE_PLAYING;
+
   return (
     <>
       <Progress progress={position ? position / duration : 1} />
@@ -50,18 +56,16 @@ function Player() {
       >
         <View style={styles.wrapper}>
           <View style={styles.half}>
-            <Text style={styles.text}>
+            <Text
+              style={{ ...styles.text, color: disabled ? 'gray' : theme.fg }}
+            >
               {episode ? episode.title : 'Nie odtwarzane'}
             </Text>
           </View>
           <View style={styles.half}>
             <TouchableOpacity
               style={styles.controlButton}
-              disabled={
-                !playbackState ||
-                (playbackState !== STATE_PAUSED &&
-                  playbackState !== STATE_PLAYING)
-              }
+              disabled={disabled}
               onPress={() =>
                 playbackState === STATE_PAUSED
                   ? TrackPlayer.play()
@@ -69,8 +73,8 @@ function Player() {
               }
             >
               <Icon
-                name={playbackState === STATE_PLAYING ? 'pause' : 'play'}
-                color={theme.fg}
+                name={playing ? 'pause' : 'play'}
+                color={disabled ? 'gray' : theme.fg}
                 size={16}
               />
             </TouchableOpacity>
@@ -96,7 +100,6 @@ const styles = StyleSheet.create({
   text: {
     paddingVertical: 14,
     paddingHorizontal: 10,
-    color: theme.fg,
     fontSize: 14,
   },
   controlButton: {

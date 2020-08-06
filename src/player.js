@@ -17,17 +17,16 @@ export function episodesToQueue(episodes) {
   return queue;
 }
 
-export function playEpisode(e) {
-  TrackPlayer.setupPlayer().then(() => {
-    const {
-      episodes: { episodes },
-    } = store.getState();
+export async function playEpisode(e) {
+  const {
+    episodes: { episodes },
+  } = store.getState();
 
-    TrackPlayer.reset();
-    TrackPlayer.add(episodesToQueue(episodes));
-    TrackPlayer.skip(e.id);
-    TrackPlayer.play();
-  });
+  await TrackPlayer.setupPlayer();
+  await TrackPlayer.reset();
+  await TrackPlayer.add(episodesToQueue(episodes));
+  await TrackPlayer.skip(e.id);
+  await TrackPlayer.play();
 }
 
 export async function playbackService() {}
