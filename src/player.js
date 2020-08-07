@@ -17,16 +17,33 @@ export function episodesToQueue(episodes) {
   return queue;
 }
 
-export async function playEpisode(e) {
+export function playEpisode(e) {
   const {
     episodes: { episodes },
   } = store.getState();
 
-  await TrackPlayer.setupPlayer();
-  await TrackPlayer.reset();
-  await TrackPlayer.add(episodesToQueue(episodes));
-  await TrackPlayer.skip(e.id);
-  await TrackPlayer.play();
+  TrackPlayer.setupPlayer().then(() => {
+    TrackPlayer.updateOptions({
+      capabilities: [
+        TrackPlayer.CAPABILITY_PLAY,
+        TrackPlayer.CAPABILITY_PAUSE,
+        TrackPlayer.CAPABILITY_JUMP_FORWARD,
+        TrackPlayer.CAPABILITY_JUMP_BACKWARD,
+        TrackPlayer.CAPABILITY_STOP,
+      ],
+    });
+
+    TrackPlayer.reset();
+    TrackPlayer.add(episodesToQueue(episodes));
+    TrackPlayer.skip(e.id);
+    TrackPlayer.play();
+  });
 }
 
-export async function playbackService() {}
+export async function playbackService() {
+  TrackPlayer.addEventListener('remote-play', () => TrackPlayer.play());
+
+  TrackPlayer.addEventListener('remote-pause', () => TrackPlayer.pause());
+
+  TrackPlayer.addEventListener('remote-stop', () => TrackPlayer.destroy());
+}
