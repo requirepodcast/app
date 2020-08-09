@@ -1,4 +1,10 @@
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, {
+  useTrackPlayerProgress,
+  useTrackPlayerEvents,
+  TrackPlayerEvents,
+  getCurrentTrack,
+  getState,
+} from 'react-native-track-player';
 
 import requireLogo from './images/RequireLogo.png';
 import { store } from './store/store';
@@ -22,7 +28,7 @@ export function playEpisode(e) {
     episodes: { episodes },
   } = store.getState();
 
-  TrackPlayer.setupPlayer().then(() => {
+  TrackPlayer.setupPlayer({ backBuffer: 10, minBuffer: 10 }).then(() => {
     TrackPlayer.updateOptions({
       capabilities: [
         TrackPlayer.CAPABILITY_PLAY,
@@ -41,9 +47,82 @@ export function playEpisode(e) {
 }
 
 export async function playbackService() {
+  TrackPlayer.reset();
+
   TrackPlayer.addEventListener('remote-play', () => TrackPlayer.play());
 
   TrackPlayer.addEventListener('remote-pause', () => TrackPlayer.pause());
 
   TrackPlayer.addEventListener('remote-stop', () => TrackPlayer.destroy());
+}
+
+import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { setPlayerState } from './store/actions/player';
+
+export function usePlayer() {
+  const { episodes } = useSelector((state) => state.episodes);
+  const [playbackState, setPlaybackState] = useState(null);
+  const [episode, setEpisode] = useState(null);
+  const { position, duration } = useTrackPlayerProgress();
+  const dispatch = useDispatch();
+
+  useTrackPlayerEvents(
+    [
+      TrackPlayerEvents.PLAYBACK_STATE,
+      TrackPlayerEvents.PLAYBACK_TRACK_CHANGED,
+    ],
+    (e) => {
+      if (e.type === TrackPlayerEvents.PLAYBACK_STATE) {
+        setPlaybackState(e.state);
+      }
+
+      if (e.type === TrackPlayerEvents.PLAYBACK_TRACK_CHANGED) {
+        if (e.nextTrack) {
+          setEpisode(episodes.find((ep) => ep.id === e.nextTrack));
+        } else {
+          setEpisode(null);
+        }
+      }
+    },
+  );
+
+  useEffect(() => {
+    getCurrentTrack().then((id) => {
+      setEpisode(episodes.find((ep) => ep.id === id));
+    });
+
+    getState().then((state) => {
+      setPlaybackState(state);
+    });
+  }, [episodes]);
+
+  const disabled =
+    !playbackState ||
+    (playbackState !== TrackPlayer.STATE_PAUSED &&
+      playbackState !== TrackPlayer.STATE_PLAYING);
+
+  const playing = playbackState === TrackPlayer.STATE_PLAYING;
+
+  useEffect(() => {
+    dispatch(
+      setPlayerState({
+        position: parseInt(position, 10),
+        duration: parseInt(duration, 10),
+        episode,
+        playbackState,
+        disabled,
+        playing,
+      }),
+    );
+  }, [position, duration, episode, playbackState, disabled, playing]);
+
+  return {
+    position: parseInt(position, 10),
+    duration: parseInt(duration, 10),
+    episode,
+    playbackState,
+    disabled,
+    playing,
+  };
 }
