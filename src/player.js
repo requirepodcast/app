@@ -29,7 +29,7 @@ export function playEpisode(e) {
     episodes: { episodes },
   } = store.getState();
 
-  TrackPlayer.setupPlayer({ backBuffer: 10, minBuffer: 10 }).then(() => {
+  TrackPlayer.setupPlayer({ backBuffer: 10, minBuffer: 10 }).then(async () => {
     TrackPlayer.updateOptions({
       capabilities: [
         TrackPlayer.CAPABILITY_PLAY,
@@ -42,8 +42,12 @@ export function playEpisode(e) {
 
     TrackPlayer.reset();
     TrackPlayer.add(episodesToQueue(episodes));
-    TrackPlayer.skip(e.id);
+    await TrackPlayer.skip(e.id);
     TrackPlayer.play();
+
+    AsyncStorage.getItem(`progress_${e.title}`)
+      .then((savedPosition) => TrackPlayer.seekTo(Number(savedPosition)))
+      .catch(() => {});
   });
 }
 
@@ -119,14 +123,6 @@ export function usePlayer() {
       }),
     );
   }, [position, duration, episode, playbackState, disabled, playing]);
-
-  useEffect(() => {
-    if (episode) {
-      AsyncStorage.getItem(`progress_${episode.title}`).then((savedPosition) =>
-        TrackPlayer.seekTo(Number(savedPosition)),
-      );
-    }
-  }, [episode]);
 
   useEffect(() => {
     (async () => {
