@@ -1,45 +1,31 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector, useDispatch } from 'react-redux';
 import Slider from '@react-native-community/slider';
+import TrackPlayer from 'react-native-track-player';
 import { theme } from '../../utils/theme';
-import { getEpisode } from '../../utils/getEpisode';
 import ControlButton from './ControlButton';
-import {
-  resumePlaying,
-  pausePlaying,
-  seek as seekTo,
-} from '../../store/actions/player';
 import SeekButton from './SeekButton';
 
-function formatProgress(progress) {
+function formatTime(progress) {
   return new Date(progress * 1000).toISOString().substr(11, 8);
 }
 
 function PlayerModal() {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const {
-    player: { queuePosition, isPaused, progress, duration, isPlaying },
-    episodes: { episodes },
-  } = useSelector((state) => state);
+  const [sliderValue, setSliderValue] = useState(0);
+  const { position, duration, episode, playing, disabled } = useSelector(
+    (state) => state.player,
+  );
 
-  const episode = getEpisode(queuePosition, episodes);
+  const progress = sliderValue || position / duration || 0;
 
-  function seek(by) {
-    dispatch(seekTo(progress + by));
+  function onSlidingComplete(val) {
+    TrackPlayer.seekTo(val * duration);
+    setSliderValue(0);
   }
-
-  const progressFraction =
-    Math.round((progress / duration + Number.EPSILON) * 1000) / 1000;
-
-  useEffect(() => {
-    if (!isPlaying) {
-      navigation.goBack();
-    }
-  });
 
   return (
     <View style={styles.wrapper}>
@@ -49,35 +35,41 @@ function PlayerModal() {
       >
         <Icon name="close" size={25} color={theme.fg} />
       </TouchableOpacity>
-      {episode && (
-        <>
-          <Text style={styles.title}>{episode.title}</Text>
-          <View style={styles.controlButtons}>
-            <SeekButton onPress={() => seek(-10)} name="replay-10" />
-            <ControlButton
-              onPress={() =>
-                dispatch(isPaused ? resumePlaying() : pausePlaying())
-              }
-              isPaused={isPaused}
-            />
-            <SeekButton onPress={() => seek(10)} name="forward-10" />
-          </View>
-          <Slider
-            style={styles.slider}
-            maximumTrackTintColor={'grey'}
-            minimumTrackTintColor={theme.red}
-            thumbTintColor={theme.red}
-            value={progressFraction}
-            onSlidingComplete={(val) => dispatch(seekTo(val * duration))}
+      <>
+        <Text style={styles.title}>{episode && episode.title}</Text>
+        <View style={styles.controlButtons}>
+          <SeekButton
+            onPress={() => TrackPlayer.seekTo(position - 10)}
+            name="replay-10"
+            disabled={disabled}
           />
-          <View style={styles.timerWrapper}>
-            <Text style={styles.timer}>{formatProgress(progress)}</Text>
-            <Text style={styles.timer}>
-              -{formatProgress(duration - progress)}
-            </Text>
-          </View>
-        </>
-      )}
+          <ControlButton
+            onPress={() => (playing ? TrackPlayer.pause() : TrackPlayer.play())}
+            isPaused={!playing}
+            disabled={disabled}
+          />
+          <SeekButton
+            onPress={() => TrackPlayer.seekTo(position + 10)}
+            name="forward-10"
+            disabled={disabled}
+          />
+        </View>
+        <Slider
+          style={styles.slider}
+          maximumTrackTintColor={'grey'}
+          minimumTrackTintColor={theme.red}
+          thumbTintColor={theme.red}
+          value={position / duration || 0}
+          onSlidingComplete={onSlidingComplete}
+          onValueChange={(val) => setSliderValue(val)}
+        />
+        <View style={styles.timerWrapper}>
+          <Text style={styles.timer}>{formatTime(progress * duration)}</Text>
+          <Text style={styles.timer}>
+            -{formatTime(duration - progress * duration)}
+          </Text>
+        </View>
+      </>
     </View>
   );
 }

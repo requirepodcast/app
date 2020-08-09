@@ -7,8 +7,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Provider } from 'react-redux';
-import createSagaMiddleware from 'redux-saga';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
 
 import ListenScreen from './screens/ListenScreen';
 import { theme } from './utils/theme';
@@ -16,21 +14,9 @@ import { useMount } from './utils/useMount';
 import { getEpisodes } from './store/actions/episodes';
 import EpisodesScreen from './screens/EpisodesScreen';
 import TabBar from './components/TabBar/TabBar';
-
-import { rootSaga } from './store/sagas/sagas';
-import episodes from './store/reducers/episodes';
-import player from './store/reducers/player';
 import PlayerModal from './components/PlayerModal.js/PlayerModal';
 
-// Redux store
-const sagaMiddleware = createSagaMiddleware();
-
-const store = createStore(
-  combineReducers({ episodes, player }),
-  applyMiddleware(sagaMiddleware),
-);
-
-sagaMiddleware.run(rootSaga);
+import { store } from './store/store';
 
 // Navigators
 const Tab = createBottomTabNavigator();
@@ -47,7 +33,7 @@ function Main() {
           borderTopColor: theme.bg.medium,
         },
       }}
-      tabBar={props => <TabBar {...props} />}
+      tabBar={(props) => <TabBar {...props} />}
     >
       <Tab.Screen
         name="Słuchaj"
