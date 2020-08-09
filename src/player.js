@@ -5,6 +5,7 @@ import TrackPlayer, {
   getCurrentTrack,
   getState,
 } from 'react-native-track-player';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import requireLogo from './images/RequireLogo.png';
 import { store } from './store/store';
@@ -83,6 +84,8 @@ export function usePlayer() {
         } else {
           setEpisode(null);
         }
+
+        AsyncStorage.removeItem(`progress_${e.track}`);
       }
     },
   );
@@ -116,6 +119,22 @@ export function usePlayer() {
       }),
     );
   }, [position, duration, episode, playbackState, disabled, playing]);
+
+  useEffect(() => {
+    if (episode) {
+      AsyncStorage.getItem(`progress_${episode.title}`).then((savedPosition) =>
+        TrackPlayer.seekTo(Number(savedPosition)),
+      );
+    }
+  }, [episode]);
+
+  useEffect(() => {
+    (async () => {
+      if (episode && position) {
+        AsyncStorage.setItem(`progress_${episode.title}`, position.toString());
+      }
+    })();
+  }, [position]);
 
   return {
     position: parseInt(position, 10),
