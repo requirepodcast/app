@@ -33,7 +33,7 @@ function EpisodeDetails({
           <Text style={styles.title}>{episode.title}</Text>
         </View>
       </View>
-      <PlayButton size="small" onPress={() => playEpisode(episode)} />
+      <PlayButton size="small" onPress={() => playEpisode(episode.id)} />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <MarkdownView
           onLinkPress={(url) => Linking.openURL(url)}

@@ -24,7 +24,7 @@ export function episodesToQueue(episodes) {
   return queue;
 }
 
-export function playEpisode(e) {
+export function playEpisode(id, autoPlay = true) {
   const {
     episodes: { episodes },
   } = store.getState();
@@ -42,23 +42,37 @@ export function playEpisode(e) {
 
     TrackPlayer.reset();
     TrackPlayer.add(episodesToQueue(episodes));
-    await TrackPlayer.skip(e.id);
-    TrackPlayer.play();
+    await TrackPlayer.skip(id);
 
-    AsyncStorage.getItem(`progress_${e.title}`)
+    if (autoPlay) {
+      TrackPlayer.play();
+    }
+
+    AsyncStorage.getItem(`progress_${id}`)
       .then((savedPosition) => TrackPlayer.seekTo(Number(savedPosition)))
       .catch(() => {});
+
+    AsyncStorage.setItem('last_playing', `${id}`);
   });
 }
 
 export async function playbackService() {
-  TrackPlayer.reset();
-
   TrackPlayer.addEventListener('remote-play', () => TrackPlayer.play());
 
   TrackPlayer.addEventListener('remote-pause', () => TrackPlayer.pause());
 
-  TrackPlayer.addEventListener('remote-stop', () => TrackPlayer.destroy());
+  TrackPlayer.addEventListener('remote-stop', () => {
+    TrackPlayer.destroy();
+    AsyncStorage.setItem('last_playing', '');
+  });
+
+  AsyncStorage.getItem('last_playing')
+    .then((id) => {
+      if (id) {
+        playEpisode(id, false);
+      }
+    })
+    .catch(() => {});
 }
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -127,7 +141,7 @@ export function usePlayer() {
   useEffect(() => {
     (async () => {
       if (episode && position) {
-        AsyncStorage.setItem(`progress_${episode.title}`, position.toString());
+        AsyncStorage.setItem(`progress_${episode.id}`, position.toString());
       }
     })();
   }, [position]);
