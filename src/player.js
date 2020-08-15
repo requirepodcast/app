@@ -1,3 +1,4 @@
+// @flow
 import TrackPlayer, {
   useTrackPlayerProgress,
   useTrackPlayerEvents,
@@ -10,8 +11,18 @@ import AsyncStorage from '@react-native-community/async-storage';
 import requireLogo from './images/RequireLogo.png';
 import { store } from './store/store';
 
-export function episodesToQueue(episodes) {
-  const queue = [];
+import { Episode } from './types';
+
+interface QueueItem {
+  id: string;
+  url: string;
+  title: string;
+  artist: string;
+  artwork: any;
+}
+
+export function episodesToQueue(episodes: Episode[]): QueueItem[] {
+  const queue: QueueItem[] = [];
   for (let episode of episodes) {
     queue.push({
       id: episode.id,
@@ -24,10 +35,10 @@ export function episodesToQueue(episodes) {
   return queue;
 }
 
-export function playEpisode(id, autoPlay = true) {
+export function playEpisode(id: string, autoPlay: boolean = true) {
   const {
     episodes: { episodes },
-  } = store.getState();
+  }: { episodes: { episodes: Episode[] } } = store.getState();
 
   TrackPlayer.setupPlayer({ backBuffer: 10, minBuffer: 10 }).then(async () => {
     TrackPlayer.updateOptions({
