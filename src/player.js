@@ -94,8 +94,14 @@ export async function playbackService() {
           AsyncStorage.removeItem(`progress_${track}`);
           AsyncStorage.getItem('finished', (finished) => {
             const finishedEpisodes: string[] = JSON.parse(finished);
-            finishedEpisodes.push(track);
-            AsyncStorage.setItem('finished', JSON.stringify(finishedEpisodes));
+
+            if (finishedEpisodes) {
+              finishedEpisodes.push(track);
+              AsyncStorage.setItem(
+                'finished',
+                JSON.stringify(finishedEpisodes),
+              );
+            }
           });
         }
       });

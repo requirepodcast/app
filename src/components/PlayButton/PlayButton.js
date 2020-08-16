@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { theme } from '../../utils/theme';
 
-function PlayButton({ onPress, style }) {
+function PlayButton({ onPress, style, disabled = false }) {
   let buttonStyles;
 
   switch (style) {
@@ -19,7 +19,7 @@ function PlayButton({ onPress, style }) {
   }
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7} disabled={disabled}>
       <Icon style={buttonStyles} name="play">
         {!(style === 'big') && <Text>{' Odtwórz'}</Text>}
       </Icon>
