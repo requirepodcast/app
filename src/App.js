@@ -14,7 +14,7 @@ import { useMount } from './utils/useMount';
 import { getEpisodes } from './store/actions/episodes';
 import EpisodesScreen from './screens/EpisodesScreen';
 import TabBar from './components/TabBar/TabBar';
-import PlayerModal from './components/PlayerModal.js/PlayerModal';
+import PlayerModal from './components/PlayerModal/PlayerModal';
 
 import { store } from './store/store';
 

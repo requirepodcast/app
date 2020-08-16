@@ -5,6 +5,7 @@ import TrackPlayer, {
   TrackPlayerEvents,
   getCurrentTrack,
   getState,
+  getDuration,
 } from 'react-native-track-player';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -40,7 +41,7 @@ export function playEpisode(id: string, autoPlay: boolean = true) {
     episodes: { episodes },
   }: { episodes: { episodes: Episode[] } } = store.getState();
 
-  TrackPlayer.setupPlayer({ backBuffer: 10, minBuffer: 10 }).then(async () => {
+  TrackPlayer.setupPlayer({ backBuffer: 15, minBuffer: 15 }).then(async () => {
     TrackPlayer.updateOptions({
       capabilities: [
         TrackPlayer.CAPABILITY_PLAY,
@@ -51,8 +52,8 @@ export function playEpisode(id: string, autoPlay: boolean = true) {
       ],
     });
 
-    TrackPlayer.reset();
-    TrackPlayer.add(episodesToQueue(episodes));
+    await TrackPlayer.reset();
+    await TrackPlayer.add(episodesToQueue(episodes));
     await TrackPlayer.skip(id);
 
     if (autoPlay) {
@@ -62,8 +63,6 @@ export function playEpisode(id: string, autoPlay: boolean = true) {
     AsyncStorage.getItem(`progress_${id}`)
       .then((savedPosition) => TrackPlayer.seekTo(Number(savedPosition)))
       .catch(() => {});
-
-    AsyncStorage.setItem('last_playing', `${id}`);
   });
 }
 
@@ -76,6 +75,43 @@ export async function playbackService() {
     TrackPlayer.destroy();
     AsyncStorage.setItem('last_playing', '');
   });
+
+  TrackPlayer.addEventListener(
+    'playback-track-changed',
+    ({
+      track,
+      position,
+      nextTrack,
+    }: {
+      track: string,
+      position: number,
+      nextTrack: string,
+    }) => {
+      nextTrack && AsyncStorage.setItem('last_playing', `${nextTrack}`);
+
+      getDuration().then((duration) => {
+        if (Math.floor(duration) === Math.floor(position)) {
+          AsyncStorage.removeItem(`progress_${track}`);
+          AsyncStorage.getItem('finished', (finished) => {
+            const finishedEpisodes: string[] = JSON.parse(finished);
+            finishedEpisodes.push(track);
+            AsyncStorage.setItem('finished', JSON.stringify(finishedEpisodes));
+          });
+        }
+      });
+    },
+  );
+
+  TrackPlayer.addEventListener(
+    'playback-queue-ended',
+    ({ track, position }: { track: string, position: number }) => {
+      getDuration().then((duration) => {
+        if (Math.floor(duration) === Math.floor(position)) {
+          AsyncStorage.removeItem('last_playing');
+        }
+      });
+    },
+  );
 
   AsyncStorage.getItem('last_playing')
     .then((id) => {
