@@ -13,6 +13,7 @@ import requireLogo from './images/RequireLogo.png';
 import { store } from './store/store';
 
 import { Episode } from './types';
+import { setPlayerState } from './store/actions/player';
 
 interface QueueItem {
   id: string;
@@ -92,17 +93,6 @@ export async function playbackService() {
       getDuration().then((duration) => {
         if (Math.floor(duration) === Math.floor(position)) {
           AsyncStorage.removeItem(`progress_${track}`);
-          AsyncStorage.getItem('finished', (finished) => {
-            const finishedEpisodes: string[] = JSON.parse(finished);
-
-            if (finishedEpisodes) {
-              finishedEpisodes.push(track);
-              AsyncStorage.setItem(
-                'finished',
-                JSON.stringify(finishedEpisodes),
-              );
-            }
-          });
         }
       });
     },
@@ -115,6 +105,17 @@ export async function playbackService() {
         if (Math.floor(duration) === Math.floor(position)) {
           AsyncStorage.removeItem('last_playing');
         }
+
+        store.dispatch(
+          setPlayerState({
+            position: 0,
+            duration: 0,
+            episode: null,
+            playbackState: null,
+            disabled: true,
+            playing: false,
+          }),
+        );
       });
     },
   );
@@ -130,7 +131,6 @@ export async function playbackService() {
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
-import { setPlayerState } from './store/actions/player';
 
 export function usePlayer() {
   const { episodes } = useSelector((state) => state.episodes);
