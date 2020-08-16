@@ -36,7 +36,9 @@ function PlayerModal() {
         <Icon name="close" size={25} color={theme.fg} />
       </TouchableOpacity>
       <>
-        <Text style={styles.title}>{episode && episode.title}</Text>
+        <Text style={styles.title}>
+          {episode ? episode.title : 'Nie odtwarzane'}
+        </Text>
         <View style={styles.controlButtons}>
           <SeekButton
             onPress={() => TrackPlayer.seekTo(position - 10)}
@@ -59,7 +61,7 @@ function PlayerModal() {
           maximumTrackTintColor={'grey'}
           minimumTrackTintColor={theme.red}
           thumbTintColor={theme.red}
-          value={position / duration || 0}
+          value={!sliderValue ? position / duration || 0 : null}
           onSlidingComplete={onSlidingComplete}
           onValueChange={(val) => setSliderValue(val)}
         />

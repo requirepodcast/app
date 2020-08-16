@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Provider } from 'react-redux';
 
 import ListenScreen from './screens/ListenScreen';
@@ -14,7 +14,7 @@ import { useMount } from './utils/useMount';
 import { getEpisodes } from './store/actions/episodes';
 import EpisodesScreen from './screens/EpisodesScreen';
 import TabBar from './components/TabBar/TabBar';
-import PlayerModal from './components/PlayerModal.js/PlayerModal';
+import PlayerModal from './components/PlayerModal/PlayerModal';
 
 import { store } from './store/store';
 
@@ -40,7 +40,7 @@ function Main() {
         component={ListenScreen}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <Icon name="play-outline" size={size} color={color} />
+            <Icon name="headset" size={size} color={color} />
           ),
         }}
       />

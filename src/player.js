@@ -5,6 +5,7 @@ import TrackPlayer, {
   TrackPlayerEvents,
   getCurrentTrack,
   getState,
+  getDuration,
 } from 'react-native-track-player';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -12,6 +13,7 @@ import requireLogo from './images/RequireLogo.png';
 import { store } from './store/store';
 
 import { Episode } from './types';
+import { setPlayerState } from './store/actions/player';
 
 interface QueueItem {
   id: string;
@@ -40,7 +42,7 @@ export function playEpisode(id: string, autoPlay: boolean = true) {
     episodes: { episodes },
   }: { episodes: { episodes: Episode[] } } = store.getState();
 
-  TrackPlayer.setupPlayer({ backBuffer: 10, minBuffer: 10 }).then(async () => {
+  TrackPlayer.setupPlayer({ backBuffer: 15, minBuffer: 15 }).then(async () => {
     TrackPlayer.updateOptions({
       capabilities: [
         TrackPlayer.CAPABILITY_PLAY,
@@ -51,8 +53,8 @@ export function playEpisode(id: string, autoPlay: boolean = true) {
       ],
     });
 
-    TrackPlayer.reset();
-    TrackPlayer.add(episodesToQueue(episodes));
+    await TrackPlayer.reset();
+    await TrackPlayer.add(episodesToQueue(episodes));
     await TrackPlayer.skip(id);
 
     if (autoPlay) {
@@ -60,10 +62,11 @@ export function playEpisode(id: string, autoPlay: boolean = true) {
     }
 
     AsyncStorage.getItem(`progress_${id}`)
-      .then((savedPosition) => TrackPlayer.seekTo(Number(savedPosition)))
+      .then(
+        async (savedPosition) =>
+          await TrackPlayer.seekTo(Number(savedPosition)),
+      )
       .catch(() => {});
-
-    AsyncStorage.setItem('last_playing', `${id}`);
   });
 }
 
@@ -77,18 +80,42 @@ export async function playbackService() {
     AsyncStorage.setItem('last_playing', '');
   });
 
-  AsyncStorage.getItem('last_playing')
-    .then((id) => {
-      if (id) {
-        playEpisode(id, false);
-      }
-    })
-    .catch(() => {});
+  TrackPlayer.addEventListener(
+    'playback-track-changed',
+    ({ track, position }: { track: string, position: number }) => {
+      getDuration().then((duration) => {
+        if (Math.floor(duration) === Math.floor(position)) {
+          AsyncStorage.removeItem(`progress_${track}`);
+        }
+      });
+    },
+  );
+
+  TrackPlayer.addEventListener(
+    'playback-queue-ended',
+    ({ track, position }: { track: string, position: number }) => {
+      getDuration().then((duration) => {
+        if (Math.floor(duration) === Math.floor(position)) {
+          AsyncStorage.removeItem('last_playing');
+        }
+
+        store.dispatch(
+          setPlayerState({
+            position: 0,
+            duration: 0,
+            episode: null,
+            playbackState: null,
+            disabled: true,
+            playing: false,
+          }),
+        );
+      });
+    },
+  );
 }
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
-import { setPlayerState } from './store/actions/player';
 
 export function usePlayer() {
   const { episodes } = useSelector((state) => state.episodes);
@@ -113,8 +140,6 @@ export function usePlayer() {
         } else {
           setEpisode(null);
         }
-
-        AsyncStorage.removeItem(`progress_${e.track}`);
       }
     },
   );
