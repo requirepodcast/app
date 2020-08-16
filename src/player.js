@@ -62,7 +62,10 @@ export function playEpisode(id: string, autoPlay: boolean = true) {
     }
 
     AsyncStorage.getItem(`progress_${id}`)
-      .then((savedPosition) => TrackPlayer.seekTo(Number(savedPosition)))
+      .then(
+        async (savedPosition) =>
+          await TrackPlayer.seekTo(Number(savedPosition)),
+      )
       .catch(() => {});
   });
 }
@@ -79,17 +82,7 @@ export async function playbackService() {
 
   TrackPlayer.addEventListener(
     'playback-track-changed',
-    ({
-      track,
-      position,
-      nextTrack,
-    }: {
-      track: string,
-      position: number,
-      nextTrack: string,
-    }) => {
-      nextTrack && AsyncStorage.setItem('last_playing', `${nextTrack}`);
-
+    ({ track, position }: { track: string, position: number }) => {
       getDuration().then((duration) => {
         if (Math.floor(duration) === Math.floor(position)) {
           AsyncStorage.removeItem(`progress_${track}`);
@@ -119,14 +112,6 @@ export async function playbackService() {
       });
     },
   );
-
-  AsyncStorage.getItem('last_playing')
-    .then((id) => {
-      if (id) {
-        playEpisode(id, false);
-      }
-    })
-    .catch(() => {});
 }
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -155,8 +140,6 @@ export function usePlayer() {
         } else {
           setEpisode(null);
         }
-
-        AsyncStorage.removeItem(`progress_${e.track}`);
       }
     },
   );
