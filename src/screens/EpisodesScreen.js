@@ -8,10 +8,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import EpisodesList from '../components/EpisodesList/EpisodesList';
 import { theme } from '../utils/theme';
 import EpisodeDetails from '../components/EpisodeDetails/EpisodeDetails';
+import SettingsScreen from './SettingsScreen';
+import { useNavigation } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
 function EpisodesScreen() {
+  const { navigate } = useNavigation();
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -31,7 +35,10 @@ function EpisodesScreen() {
         component={EpisodesList}
         options={{
           headerRight: () => (
-            <TouchableOpacity style={{ marginHorizontal: 10 }}>
+            <TouchableOpacity
+              style={{ marginHorizontal: 10 }}
+              onPress={() => navigate('Ustawienia')}
+            >
               <Icon name="settings" color="white" size={20} />
             </TouchableOpacity>
           ),
@@ -45,6 +52,7 @@ function EpisodesScreen() {
           gestureDirection: 'horizontal',
         }}
       />
+      <Stack.Screen name="Ustawienia" component={SettingsScreen} />
     </Stack.Navigator>
   );
 }

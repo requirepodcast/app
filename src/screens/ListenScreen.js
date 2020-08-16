@@ -19,7 +19,7 @@ function ListenScreen() {
       <PlayButton
         onPress={() => playEpisode(episode.id)}
         style="big"
-        disabled={!!episode}
+        disabled={!episode}
       />
     </SafeAreaView>
   );

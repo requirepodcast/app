@@ -25,6 +25,7 @@ function Player() {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => navigate('PlayerModal')}
+        disabled={!episode}
       >
         <View style={styles.wrapper}>
           <View style={styles.half}>
