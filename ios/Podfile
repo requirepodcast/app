@@ -8,6 +8,7 @@ target 'requirepodcast_app' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+
   target 'requirepodcast_appTests' do
     inherit! :complete
     # Pods for testing

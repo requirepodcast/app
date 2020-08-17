@@ -1,6 +1,7 @@
 // @flow
 import { takeEvery, put, all } from 'redux-saga/effects';
 import AsyncStorage from '@react-native-community/async-storage';
+import SplashScreen from 'react-native-splash-screen';
 import { episodes as episodesAction } from '../actions/episodes';
 import { Episode } from '../../types';
 import { playEpisode } from '../../player';
@@ -19,6 +20,8 @@ function* getEpisodes() {
       }
     })
     .catch(() => {});
+
+  SplashScreen.hide();
 }
 
 export function* rootSaga(): any {
