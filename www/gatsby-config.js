@@ -28,5 +28,6 @@ module.exports = {
         icon: `src/assets/images/RequireLogo.png`,
       },
     },
+    `gatsby-plugin-styled-components`,
   ],
 };

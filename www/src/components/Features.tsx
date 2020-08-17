@@ -15,7 +15,7 @@ const H2 = styled.h2`
 
 const Images = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+  grid-template-columns: auto auto auto;
   grid-gap: 10px;
 `;
 
@@ -27,8 +27,8 @@ const Features: React.FC = () => {
           node {
             id
             childImageSharp {
-              fixed(width: 225) {
-                ...GatsbyImageSharpFixed
+              fluid {
+                ...GatsbyImageSharpFluid
               }
             }
           }
@@ -55,7 +55,7 @@ const Features: React.FC = () => {
       <h3>Screenshoty</h3>
       <Images>
         {data.allFile.edges.map(({ node }) => (
-          <Img key={node.id} fixed={node.childImageSharp.fixed} />
+          <Img key={node.id} fluid={node.childImageSharp.fluid} />
         ))}
       </Images>
     </Wrapper>
