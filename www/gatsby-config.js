@@ -16,5 +16,17 @@ module.exports = {
     'gatsby-transformer-sharp',
     'gatsby-plugin-sharp',
     'gatsby-transformer-remark',
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: `Require Podcast App`,
+        short_name: `Require Podcast`,
+        start_url: `/`,
+        background_color: `#0f111a`,
+        theme_color: `#ff5370`,
+        display: `minimal-ui`,
+        icon: `src/assets/images/RequireLogo.png`,
+      },
+    },
   ],
 };

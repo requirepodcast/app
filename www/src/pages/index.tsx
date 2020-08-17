@@ -8,6 +8,7 @@ import Header from '../components/Header';
 import Helmet from '../components/Helmet';
 import Features from '../components/Features';
 import Changelog from '../components/Changelog';
+import Footer from '../components/Footer';
 
 const IndexPage: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const IndexPage: React.FC = () => {
         <Header />
         <Features />
         <Changelog />
+        <Footer />
       </>
     </ThemeProvider>
   );

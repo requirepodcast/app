@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 exports.sourceNodes = ({ actions, createNodeId, createContentDigest }) => {
-  fetch('https://api.github.com/repos/requirepodcast/app/releases')
+  return fetch('https://api.github.com/repos/requirepodcast/app/releases')
     .then(res => res.json())
     .then(releases => {
       for (let release of releases) {
@@ -38,7 +38,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     type Release implements Node {
       name: String
       description: String
-      createdAt: Date
+      createdAt: Date @dateformat
       apk: String
     }
   `;
