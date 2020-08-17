@@ -25,6 +25,7 @@ const Features: React.FC = () => {
       allFile(filter: { relativePath: { regex: "/screenshots/" } }) {
         edges {
           node {
+            id
             childImageSharp {
               fixed(width: 225) {
                 ...GatsbyImageSharpFixed
@@ -54,7 +55,7 @@ const Features: React.FC = () => {
       <h3>Screenshoty</h3>
       <Images>
         {data.allFile.edges.map(({ node }) => (
-          <Img fixed={node.childImageSharp.fixed} />
+          <Img key={node.id} fixed={node.childImageSharp.fixed} />
         ))}
       </Images>
     </Wrapper>

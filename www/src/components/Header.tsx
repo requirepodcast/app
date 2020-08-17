@@ -22,7 +22,15 @@ const Header: React.FC = () => {
   return (
     <Wrapper>
       <H1>Require Podcast App</H1>
-      <Button>Pobierz</Button>
+      <Button
+        onClick={() =>
+          document
+            .querySelector('#changelog')
+            .scrollIntoView({ behavior: 'smooth' })
+        }
+      >
+        Pobierz
+      </Button>
     </Wrapper>
   );
 };
