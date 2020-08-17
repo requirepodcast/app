@@ -7,6 +7,7 @@ import { theme } from '../assets/styles/theme';
 import Header from '../components/Header';
 import Helmet from '../components/Helmet';
 import Features from '../components/Features';
+import Changelog from '../components/Changelog';
 
 const IndexPage: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const IndexPage: React.FC = () => {
         <Helmet />
         <Header />
         <Features />
+        <Changelog />
       </>
     </ThemeProvider>
   );

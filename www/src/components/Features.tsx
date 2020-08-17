@@ -6,7 +6,7 @@ import Img from 'gatsby-image';
 const Wrapper = styled.div`
   max-width: 700px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 50px 20px;
 `;
 
 const H2 = styled.h2`
@@ -21,7 +21,7 @@ const Images = styled.div`
 
 const Features: React.FC = () => {
   const data = useStaticQuery(graphql`
-    query MyQuery {
+    query {
       allFile(filter: { relativePath: { regex: "/screenshots/" } }) {
         edges {
           node {
