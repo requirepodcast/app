@@ -4,6 +4,11 @@ import styled from 'styled-components';
 const Wrapper = styled.div<{ first: boolean }>`
   border-top: ${({ first, theme }) => !first && `2px solid ${theme.red}`};
   opacity: ${({ first }) => !first && '0.6'};
+  transition: opacity 0.5s ease;
+
+  :hover {
+    opacity: 1;
+  }
 `;
 
 const H3 = styled.h3`
@@ -13,7 +18,7 @@ const H3 = styled.h3`
   align-items: center;
 `;
 
-const Date = styled.p`
+const ReleaseDate = styled.p`
   color: #aaa;
   font-size: 0.8em;
   margin: 0;
@@ -38,6 +43,19 @@ const DownloadButton = styled.a`
   }
 `;
 
+function fromNow(date: Date) {
+  const day = date.getTime() / (1000 * 60 * 60 * 24);
+  const today = Date.now() / (1000 * 60 * 60 * 24);
+
+  const days = Math.floor(today - day);
+
+  return days === 1
+    ? `1 dzień temu`
+    : days === 0
+    ? `dzisiaj`
+    : `${days} dni temu`;
+}
+
 const ChangelogItem: React.FC<{
   name: string;
   apk: string;
@@ -52,7 +70,7 @@ const ChangelogItem: React.FC<{
         Pobierz
       </DownloadButton>
     </H3>
-    <Date>{createdAt}</Date>
+    <ReleaseDate>{fromNow(new Date(createdAt))}</ReleaseDate>
     <div dangerouslySetInnerHTML={{ __html: description }} />
   </Wrapper>
 );

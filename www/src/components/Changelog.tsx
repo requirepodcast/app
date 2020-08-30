@@ -31,7 +31,7 @@ const Changelog: React.FC = () => {
         id
         apk
         name
-        createdAt(fromNow: true, locale: "pl")
+        createdAt(locale: "pl")
         childMarkdownRemark {
           html
         }
