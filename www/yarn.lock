@@ -8808,10 +8808,10 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-light-date@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/light-date/-/light-date-1.1.2.tgz#4a0d752a59f9d34f7c98fe7c26a3a0c507929b7c"
-  integrity sha512-Rj30E1Dgs1Tj2EagKI5ZqKHBluCKO0y8IKi6KN+OteQelylUF2pFC/UoksfO+0VU6CCK3AozXQxeIfkDzghxwQ==
+light-date@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/light-date/-/light-date-1.1.3.tgz#a0e4993845cab7b9fb9071320d16784098326829"
+  integrity sha512-6ISJYXwRp0ePkoKyp0IwUMi5RRHF0XiWE/Sg26FJwu3se1EKYnumxfcHmh06eLioENIgjuiv6jMPP28bxiEnGA==
 
 lines-and-columns@^1.1.6:
   version "1.1.6"

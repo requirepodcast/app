@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { format } from 'light-date';
 
 const Wrapper = styled.div<{ first: boolean }>`
   border-top: ${({ first, theme }) => !first && `2px solid ${theme.red}`};
@@ -43,19 +44,6 @@ const DownloadButton = styled.a`
   }
 `;
 
-function fromNow(date: Date) {
-  const day = date.getTime() / (1000 * 60 * 60 * 24);
-  const today = Date.now() / (1000 * 60 * 60 * 24);
-
-  const days = Math.floor(today - day);
-
-  return days === 1
-    ? `1 dzień temu`
-    : days === 0
-    ? `dzisiaj`
-    : `${days} dni temu`;
-}
-
 const ChangelogItem: React.FC<{
   name: string;
   apk: string;
@@ -70,7 +58,7 @@ const ChangelogItem: React.FC<{
         Pobierz
       </DownloadButton>
     </H3>
-    <ReleaseDate>{fromNow(new Date(createdAt))}</ReleaseDate>
+    <ReleaseDate>{format(new Date(createdAt), '{yyyy}-{MM}-{dd}')}</ReleaseDate>
     <div dangerouslySetInnerHTML={{ __html: description }} />
   </Wrapper>
 );
