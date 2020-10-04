@@ -18,11 +18,11 @@ export default {
       return this.status.NOT_SET;
     }
 
-    if (val === 'yes') {
+    if (val === 'true') {
       return this.status.SUBSCRIBED;
     }
 
-    if (val === 'no') {
+    if (val === 'false') {
       return this.status.NOT_SUBSCRIBED;
     }
   },

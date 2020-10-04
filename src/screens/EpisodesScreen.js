@@ -1,9 +1,6 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import {
-  createStackNavigator,
-  CardStyleInterpolators,
-} from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import EpisodesList from '../components/EpisodesList/EpisodesList';
 import { theme } from '../utils/theme';
@@ -42,6 +39,7 @@ function EpisodesScreen() {
               <Icon name="settings" color="white" size={20} />
             </TouchableOpacity>
           ),
+          gestureDirection: 'horizontal',
         }}
       />
       <Stack.Screen
@@ -52,7 +50,14 @@ function EpisodesScreen() {
           gestureDirection: 'horizontal',
         }}
       />
-      <Stack.Screen name="Ustawienia" component={SettingsScreen} />
+      <Stack.Screen
+        name="Ustawienia"
+        component={SettingsScreen}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
+        }}
+      />
     </Stack.Navigator>
   );
 }

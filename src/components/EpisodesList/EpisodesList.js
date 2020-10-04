@@ -6,13 +6,13 @@ import Item from './Item';
 import { theme } from '../../utils/theme';
 
 function EpisodeList() {
-  const episodes = useSelector(store => store.episodes.episodes);
+  const episodes = useSelector((store) => store.episodes.episodes);
 
   return (
     <View style={styles.wrapper}>
       <FlatList
         data={episodes.slice().reverse()}
-        keyExtractor={episode => episode.id}
+        keyExtractor={(episode) => episode.id}
         renderItem={({ item, index }) => (
           <Item episode={item} queuePosition={episodes.length - 1 - index} />
         )}
