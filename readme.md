@@ -22,6 +22,10 @@ W celu stworzenia tej apki, użyliśmy Reacta Native. Dodatkowo wykorzystaliśmy
 - [react-native-video](https://github.com/react-native-community/react-native-video) - odtwarzacz audio
 - [react-native-music-control](https://github.com/tanguyantoine/react-native-music-control) - Systemowe odtwarzacze audio (w centrum powiadomień, na zablokowanym ekranie, itp.)
 
+### Kontrybucje
+
+Masz pomysł jak ulepszyć naszą aplikację? Chcesz nam pomóc w jej rozwoju? Sprawdź informacje w pliku [contributions.md](contributions.md)
+
 ### Screenshoty
 
 <img src="screenshots/sc1.png" width="250" />
