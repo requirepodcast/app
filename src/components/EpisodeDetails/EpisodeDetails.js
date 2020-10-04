@@ -1,12 +1,5 @@
 import React, { useLayoutEffect } from 'react';
-import {
-  View,
-  ScrollView,
-  StyleSheet,
-  Text,
-  Image,
-  Linking,
-} from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Image, Linking } from 'react-native';
 import { MarkdownView } from 'react-native-markdown-view';
 import { theme } from '../../utils/theme';
 import PlayButton from '../PlayButton/PlayButton';
@@ -101,7 +94,7 @@ const markdownStyles = {
   },
   inlineCode: {
     fontFamily: 'monospace',
-    backgroundColor: theme.ligher,
+    backgroundColor: theme.lighter,
   },
   heading2: {
     marginTop: 5,

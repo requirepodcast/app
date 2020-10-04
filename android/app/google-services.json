@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "672654821324",
+    "firebase_url": "https://requirepodcast-app.firebaseio.com",
+    "project_id": "requirepodcast-app",
+    "storage_bucket": "requirepodcast-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672654821324:android:069c9eb80575743a883f69",
+        "android_client_info": {
+          "package_name": "com.requirepodcast_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "672654821324-bpu18dr7pdpp8u0p0l3o1mli83vbh54a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq_VYgHdn-XGJpVbUEKAv5X2qh6XTpLW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "672654821324-bpu18dr7pdpp8u0p0l3o1mli83vbh54a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

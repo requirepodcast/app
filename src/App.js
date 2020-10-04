@@ -1,12 +1,13 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, Alert } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Provider } from 'react-redux';
+import { AsyncStorage } from '@react-native-community/async-storage';
 
 import ListenScreen from './screens/ListenScreen';
 import { theme } from './utils/theme';
@@ -39,18 +40,14 @@ function Main() {
         name="Słuchaj"
         component={ListenScreen}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <Icon name="headset" size={size} color={color} />
-          ),
+          tabBarIcon: ({ size, color }) => <Icon name="headset" size={size} color={color} />,
         }}
       />
       <Tab.Screen
         name="Odcinki"
         component={EpisodesScreen}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <Icon name="list" size={size} color={color} />
-          ),
+          tabBarIcon: ({ size, color }) => <Icon name="list" size={size} color={color} />,
         }}
       />
     </Tab.Navigator>
@@ -60,6 +57,30 @@ function Main() {
 function App() {
   useMount(() => {
     store.dispatch(getEpisodes());
+
+    AsyncStorage.getItem('SubscribedToNotifications').then((subscribed) => {
+      if (!subscribed) {
+        Alert.alert(
+          'Powiadomienia',
+          'Czy chcesz otrzymywać powiadomienia na temat nowych odcinków? Zawsze możesz to zmienić w ustawieniach.',
+          [
+            {
+              text: 'Nie',
+              style: 'cancel',
+              onPress: () => {
+                AsyncStorage.setItem('SubscribedToNotifications', 'false');
+              },
+            },
+            {
+              text: 'Tak',
+              onPress: () => {
+                AsyncStorage.setItem('SubscribedToNotifications', 'true');
+              },
+            },
+          ],
+        );
+      }
+    });
   });
 
   return (
@@ -69,11 +90,7 @@ function App() {
         <SafeAreaProvider>
           <NavigationContainer>
             <RootStack.Navigator mode="modal">
-              <RootStack.Screen
-                name="Main"
-                component={Main}
-                options={{ headerShown: false }}
-              />
+              <RootStack.Screen name="Main" component={Main} options={{ headerShown: false }} />
               <RootStack.Screen
                 name="PlayerModal"
                 component={PlayerModal}

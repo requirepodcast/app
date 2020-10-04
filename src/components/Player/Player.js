@@ -10,14 +10,7 @@ import { usePlayer } from '../../player';
 
 function Player() {
   const { navigate } = useNavigation();
-  const {
-    position,
-    duration,
-    episode,
-    playing,
-    disabled,
-    playbackState,
-  } = usePlayer();
+  const { position, duration, episode, playing, disabled, playbackState } = usePlayer();
 
   return (
     <>
@@ -29,9 +22,7 @@ function Player() {
       >
         <View style={styles.wrapper}>
           <View style={styles.half}>
-            <Text
-              style={{ ...styles.text, color: disabled ? 'gray' : theme.fg }}
-            >
+            <Text style={{ ...styles.text, color: disabled ? 'gray' : theme.fg }}>
               {episode ? episode.title : 'Nie odtwarzane'}
             </Text>
           </View>
