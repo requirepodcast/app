@@ -7,7 +7,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Provider } from 'react-redux';
-import { AsyncStorage } from '@react-native-community/async-storage';
 
 import ListenScreen from './screens/ListenScreen';
 import { theme } from './utils/theme';
@@ -18,6 +17,7 @@ import TabBar from './components/TabBar/TabBar';
 import PlayerModal from './components/PlayerModal/PlayerModal';
 
 import { store } from './store/store';
+import NotificationSubscribtionService from './services/NotificationSubscribtionService';
 
 // Navigators
 const Tab = createBottomTabNavigator();
@@ -58,8 +58,8 @@ function App() {
   useMount(() => {
     store.dispatch(getEpisodes());
 
-    AsyncStorage.getItem('SubscribedToNotifications').then((subscribed) => {
-      if (!subscribed) {
+    NotificationSubscribtionService.isSubscribed().then((status) => {
+      if (status === NotificationSubscribtionService.status.NOT_SET) {
         Alert.alert(
           'Powiadomienia',
           'Czy chcesz otrzymywać powiadomienia na temat nowych odcinków? Zawsze możesz to zmienić w ustawieniach.',
@@ -67,15 +67,11 @@ function App() {
             {
               text: 'Nie',
               style: 'cancel',
-              onPress: () => {
-                AsyncStorage.setItem('SubscribedToNotifications', 'false');
-              },
+              onPress: NotificationSubscribtionService.unsubscribe,
             },
             {
               text: 'Tak',
-              onPress: () => {
-                AsyncStorage.setItem('SubscribedToNotifications', 'true');
-              },
+              onPress: NotificationSubscribtionService.unsubscribe,
             },
           ],
         );
