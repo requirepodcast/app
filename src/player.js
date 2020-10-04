@@ -58,14 +58,11 @@ export function playEpisode(id: string, autoPlay: boolean = true) {
     await TrackPlayer.skip(id);
 
     if (autoPlay) {
-      TrackPlayer.play();
+      await TrackPlayer.play();
     }
 
     AsyncStorage.getItem(`progress_${id}`)
-      .then(
-        async (savedPosition) =>
-          await TrackPlayer.seekTo(Number(savedPosition)),
-      )
+      .then(async (savedPosition) => await TrackPlayer.seekTo(Number(savedPosition)))
       .catch(() => {});
   });
 }
@@ -125,10 +122,7 @@ export function usePlayer() {
   const dispatch = useDispatch();
 
   useTrackPlayerEvents(
-    [
-      TrackPlayerEvents.PLAYBACK_STATE,
-      TrackPlayerEvents.PLAYBACK_TRACK_CHANGED,
-    ],
+    [TrackPlayerEvents.PLAYBACK_STATE, TrackPlayerEvents.PLAYBACK_TRACK_CHANGED],
     (e) => {
       if (e.type === TrackPlayerEvents.PLAYBACK_STATE) {
         setPlaybackState(e.state);
@@ -156,8 +150,7 @@ export function usePlayer() {
 
   const disabled =
     !playbackState ||
-    (playbackState !== TrackPlayer.STATE_PAUSED &&
-      playbackState !== TrackPlayer.STATE_PLAYING);
+    (playbackState !== TrackPlayer.STATE_PAUSED && playbackState !== TrackPlayer.STATE_PLAYING);
 
   const playing = playbackState === TrackPlayer.STATE_PLAYING;
 

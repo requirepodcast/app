@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, Alert } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -17,6 +17,7 @@ import TabBar from './components/TabBar/TabBar';
 import PlayerModal from './components/PlayerModal/PlayerModal';
 
 import { store } from './store/store';
+import NotificationSubscribtionService from './services/NotificationSubscribtionService';
 
 // Navigators
 const Tab = createBottomTabNavigator();
@@ -39,18 +40,14 @@ function Main() {
         name="Słuchaj"
         component={ListenScreen}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <Icon name="headset" size={size} color={color} />
-          ),
+          tabBarIcon: ({ size, color }) => <Icon name="headset" size={size} color={color} />,
         }}
       />
       <Tab.Screen
         name="Odcinki"
         component={EpisodesScreen}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <Icon name="list" size={size} color={color} />
-          ),
+          tabBarIcon: ({ size, color }) => <Icon name="list" size={size} color={color} />,
         }}
       />
     </Tab.Navigator>
@@ -60,6 +57,26 @@ function Main() {
 function App() {
   useMount(() => {
     store.dispatch(getEpisodes());
+
+    NotificationSubscribtionService.isSubscribed().then((status) => {
+      if (status === NotificationSubscribtionService.status.NOT_SET) {
+        Alert.alert(
+          'Powiadomienia',
+          'Czy chcesz otrzymywać powiadomienia na temat nowych odcinków? Zawsze możesz to zmienić w ustawieniach.',
+          [
+            {
+              text: 'Nie',
+              style: 'cancel',
+              onPress: NotificationSubscribtionService.unsubscribe,
+            },
+            {
+              text: 'Tak',
+              onPress: NotificationSubscribtionService.unsubscribe,
+            },
+          ],
+        );
+      }
+    });
   });
 
   return (
@@ -69,11 +86,7 @@ function App() {
         <SafeAreaProvider>
           <NavigationContainer>
             <RootStack.Navigator mode="modal">
-              <RootStack.Screen
-                name="Main"
-                component={Main}
-                options={{ headerShown: false }}
-              />
+              <RootStack.Screen name="Main" component={Main} options={{ headerShown: false }} />
               <RootStack.Screen
                 name="PlayerModal"
                 component={PlayerModal}
