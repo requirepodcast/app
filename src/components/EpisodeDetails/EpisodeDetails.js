@@ -3,6 +3,7 @@ import { View, ScrollView, StyleSheet, Text, Image, Linking } from 'react-native
 import { MarkdownView } from 'react-native-markdown-view';
 import { theme } from '../../utils/theme';
 import PlayButton from '../PlayButton/PlayButton';
+import analytics from '@react-native-firebase/analytics';
 
 import logo from '../../images/RequireLogo.png';
 import { playEpisode } from '../../player';
@@ -15,6 +16,8 @@ function EpisodeDetails({
 }) {
   useLayoutEffect(() => {
     navigation.setOptions({ title: episode.title });
+
+    analytics().logScreenView({});
   });
 
   return (

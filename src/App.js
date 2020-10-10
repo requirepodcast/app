@@ -94,16 +94,18 @@ function App() {
             onReady={() => (routeNameRef.current = navigationRef.current.getCurrentRoute().name)}
             onStateChange={async () => {
               const previousRouteName = routeNameRef.current;
-              const currentRouteName = navigationRef.current.getCurrentRoute().name;
+              const currentRoute = navigationRef.current.getCurrentRoute();
 
-              if (previousRouteName !== currentRouteName) {
+              if (previousRouteName !== currentRoute.name) {
                 await analytics().logScreenView({
-                  screen_name: currentRouteName,
-                  screen_class: currentRouteName,
+                  screen_name: currentRoute.params?.episode
+                    ? currentRoute.params.episode.title
+                    : currentRoute.name,
+                  screen_class: currentRoute.name,
                 });
               }
 
-              routeNameRef.current = currentRouteName;
+              routeNameRef.current = currentRoute.name;
             }}
           >
             <RootStack.Navigator mode="modal">
