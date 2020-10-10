@@ -7,7 +7,6 @@ import TrackPlayer, {
   getState,
   getDuration,
 } from 'react-native-track-player';
-import AsyncStorage from '@react-native-community/async-storage';
 import analytics from '@react-native-firebase/analytics';
 
 import requireLogo from './images/RequireLogo.png';
@@ -15,6 +14,7 @@ import { store } from './store/store';
 
 import { Episode } from './types';
 import { setPlayerState } from './store/actions/player';
+import EpisodeProgressService from './services/EpisodeProgressService';
 
 interface QueueItem {
   id: string;
@@ -58,13 +58,15 @@ export function playEpisode(id: string, autoPlay: boolean = true) {
     await TrackPlayer.add(episodesToQueue(episodes));
     await TrackPlayer.skip(id);
 
+    EpisodeProgressService.getProgress(id).then(
+      async (savedPosition) => await TrackPlayer.seekTo(Number(savedPosition)),
+    );
+
     if (autoPlay) {
       await TrackPlayer.play();
     }
 
-    AsyncStorage.getItem(`progress_${id}`)
-      .then(async (savedPosition) => await TrackPlayer.seekTo(Number(savedPosition)))
-      .catch(() => {});
+    EpisodeProgressService.lastPlaying.set(id);
 
     await analytics().logEvent('play', { id, episode: episodes.find((ep) => ep.id === id) });
   });
@@ -77,7 +79,7 @@ export async function playbackService() {
 
   TrackPlayer.addEventListener('remote-stop', () => {
     TrackPlayer.destroy();
-    AsyncStorage.setItem('last_playing', '');
+    EpisodeProgressService.lastPlaying.clean();
   });
 
   TrackPlayer.addEventListener(
@@ -85,7 +87,7 @@ export async function playbackService() {
     ({ track, position }: { track: string, position: number }) => {
       getDuration().then((duration) => {
         if (Math.floor(duration) === Math.floor(position)) {
-          AsyncStorage.removeItem(`progress_${track}`);
+          EpisodeProgressService.cleanProgress(track);
         }
       });
     },
@@ -96,7 +98,7 @@ export async function playbackService() {
     ({ track, position }: { track: string, position: number }) => {
       getDuration().then((duration) => {
         if (Math.floor(duration) === Math.floor(position)) {
-          AsyncStorage.removeItem('last_playing');
+          EpisodeProgressService.lastPlaying.clean();
         }
 
         store.dispatch(
@@ -171,11 +173,9 @@ export function usePlayer() {
   }, [position, duration, episode, playbackState, disabled, playing]);
 
   useEffect(() => {
-    (async () => {
-      if (episode && position) {
-        AsyncStorage.setItem(`progress_${episode.id}`, position.toString());
-      }
-    })();
+    if (episode && position) {
+      EpisodeProgressService.saveProgress(episode.id, position);
+    }
   }, [position]);
 
   return {
