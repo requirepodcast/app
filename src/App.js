@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+
+import React, { useRef } from 'react';
 import { StatusBar, Alert } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
@@ -7,6 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Provider } from 'react-redux';
+import analytics from '@react-native-firebase/analytics';
 
 import ListenScreen from './screens/ListenScreen';
 import { theme } from './utils/theme';
@@ -55,6 +57,9 @@ function Main() {
 }
 
 function App() {
+  const navigationRef = useRef();
+  const routeNameRef = useRef();
+
   useMount(() => {
     store.dispatch(getEpisodes());
 
@@ -84,7 +89,25 @@ function App() {
       <StatusBar barStyle="light-content" />
       <Provider store={store}>
         <SafeAreaProvider>
-          <NavigationContainer>
+          <NavigationContainer
+            ref={navigationRef}
+            onReady={() => (routeNameRef.current = navigationRef.current.getCurrentRoute().name)}
+            onStateChange={async () => {
+              const previousRouteName = routeNameRef.current;
+              const currentRoute = navigationRef.current.getCurrentRoute();
+
+              if (previousRouteName !== currentRoute.name) {
+                await analytics().logScreenView({
+                  screen_name: currentRoute.params?.episode
+                    ? currentRoute.params.episode.title
+                    : currentRoute.name,
+                  screen_class: currentRoute.name,
+                });
+              }
+
+              routeNameRef.current = currentRoute.name;
+            }}
+          >
             <RootStack.Navigator mode="modal">
               <RootStack.Screen name="Main" component={Main} options={{ headerShown: false }} />
               <RootStack.Screen

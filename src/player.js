@@ -8,6 +8,7 @@ import TrackPlayer, {
   getDuration,
 } from 'react-native-track-player';
 import AsyncStorage from '@react-native-community/async-storage';
+import analytics from '@react-native-firebase/analytics';
 
 import requireLogo from './images/RequireLogo.png';
 import { store } from './store/store';
@@ -64,6 +65,8 @@ export function playEpisode(id: string, autoPlay: boolean = true) {
     AsyncStorage.getItem(`progress_${id}`)
       .then(async (savedPosition) => await TrackPlayer.seekTo(Number(savedPosition)))
       .catch(() => {});
+
+    await analytics().logEvent('play', { id, episode: episodes.find((ep) => ep.id === id) });
   });
 }
 
