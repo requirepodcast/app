@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 
 import PlayButton from '../components/PlayButton/PlayButton';
 import { theme } from '../utils/theme';
-import { playEpisode } from '../player';
 
 function ListenScreen() {
   const episodes = useSelector((store) => store.episodes.episodes);
@@ -13,14 +12,8 @@ function ListenScreen() {
   return (
     <SafeAreaView style={styles.wrapper}>
       <Text style={styles.title}>{episode && episode.title}</Text>
-      <Text style={styles.description}>
-        {episode && episode.shortDescription}
-      </Text>
-      <PlayButton
-        onPress={() => playEpisode(episode.id)}
-        style="big"
-        disabled={!episode}
-      />
+      <Text style={styles.description}>{episode && episode.shortDescription}</Text>
+      <PlayButton style="big" disabled={!episode} />
     </SafeAreaView>
   );
 }

@@ -6,7 +6,6 @@ import PlayButton from '../PlayButton/PlayButton';
 import analytics from '@react-native-firebase/analytics';
 
 import logo from '../../images/RequireLogo.png';
-import { playEpisode } from '../../player';
 
 function EpisodeDetails({
   route: {
@@ -29,7 +28,7 @@ function EpisodeDetails({
           <Text style={styles.title}>{episode.title}</Text>
         </View>
       </View>
-      <PlayButton size="small" onPress={() => playEpisode(episode.id)} />
+      <PlayButton size="small" />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <MarkdownView
           onLinkPress={(url) => Linking.openURL(url)}
