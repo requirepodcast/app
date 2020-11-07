@@ -31,7 +31,7 @@ function EpisodeDetails({
       <PlayButton size="small" />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <MarkdownView
-          onLinkPress={(url) => Linking.openURL(url)}
+          onLinkPress={url => Linking.openURL(url)}
           style={{ paddingHorizontal: 10 }}
           styles={markdownStyles}
         >

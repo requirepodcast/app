@@ -19,7 +19,7 @@ function SettingsScreen() {
   }
 
   useMount(() => {
-    NotificationSubscribtionService.isSubscribed().then((status) => {
+    NotificationSubscribtionService.isSubscribed().then(status => {
       if (status === NotificationSubscribtionService.status.SUBSCRIBED) {
         setSubscribed(true);
       } else {

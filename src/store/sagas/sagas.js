@@ -1,13 +1,11 @@
-// @flow
 import { takeEvery, put, all } from 'redux-saga/effects';
 import SplashScreen from 'react-native-splash-screen';
 import { episodes as episodesAction } from '../actions/episodes';
-import { Episode } from '../../types';
 
 function* getEpisodes() {
-  const { episodes }: { episodes: Episode[] } = yield fetch(
-    'https://require.podcast.gq/episodes.json',
-  ).then((res) => res.json());
+  const { episodes } = yield fetch('https://require.podcast.gq/episodes.json').then(res =>
+    res.json(),
+  );
 
   yield put(episodesAction(episodes));
 

@@ -36,7 +36,7 @@ function Main() {
           borderTopColor: theme.bg.medium,
         },
       }}
-      tabBar={(props) => <TabBar {...props} />}
+      tabBar={props => <TabBar {...props} />}
     >
       <Tab.Screen
         name="Słuchaj"
@@ -63,7 +63,7 @@ function App() {
   useMount(() => {
     store.dispatch(getEpisodes());
 
-    NotificationSubscribtionService.isSubscribed().then((status) => {
+    NotificationSubscribtionService.isSubscribed().then(status => {
       if (status === NotificationSubscribtionService.status.NOT_SET) {
         Alert.alert(
           'Powiadomienia',

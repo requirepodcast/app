@@ -11,10 +11,7 @@ import player from '../../store/reducers/player';
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(
-  combineReducers({ episodes, player }),
-  applyMiddleware(sagaMiddleware),
-);
+const store = createStore(combineReducers({ episodes, player }), applyMiddleware(sagaMiddleware));
 
 sagaMiddleware.run(rootSaga);
 

@@ -38,7 +38,7 @@ function PlayerModal() {
           thumbTintColor={theme.red}
           value={sliderValue}
           onSlidingComplete={onSlidingComplete}
-          onValueChange={(val) => setSliderValue(val)}
+          onValueChange={val => setSliderValue(val)}
         />
         <View style={styles.timerWrapper}>
           <Text style={styles.timer}>{formatTime(sliderValue)}</Text>

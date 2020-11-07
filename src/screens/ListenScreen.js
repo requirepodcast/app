@@ -6,7 +6,7 @@ import PlayButton from '../components/PlayButton/PlayButton';
 import { theme } from '../utils/theme';
 
 function ListenScreen() {
-  const episodes = useSelector((store) => store.episodes.episodes);
+  const episodes = useSelector(store => store.episodes.episodes);
   const episode = episodes.slice(-1)[0];
 
   return (
