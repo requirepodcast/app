@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
@@ -14,7 +14,13 @@ function formatTime(progress) {
 
 function PlayerModal() {
   const navigation = useNavigation();
-  const { playing, title, paused, trigger, seekBy } = usePlayer();
+  const [sliderValue, setSliderValue] = useState(null);
+  const { playing, title, paused, trigger, seekBy, time, duration, progress, seekTo } = usePlayer();
+
+  function onSlidingComplete(v) {
+    seekTo(v * duration);
+    setTimeout(() => setSliderValue(null), 200); // Cosmetic purposes
+  }
 
   return (
     <View style={styles.wrapper}>
@@ -33,10 +39,13 @@ function PlayerModal() {
           maximumTrackTintColor={'grey'}
           minimumTrackTintColor={theme.red}
           thumbTintColor={theme.red}
+          value={sliderValue === null ? progress : undefined}
+          onValueChange={v => setSliderValue(v)}
+          onSlidingComplete={onSlidingComplete}
         />
         <View style={styles.timerWrapper}>
-          <Text style={styles.timer}>{formatTime(0)}</Text>
-          <Text style={styles.timer}>-{formatTime(0)}</Text>
+          <Text style={styles.timer}>{formatTime(time)}</Text>
+          <Text style={styles.timer}>-{formatTime(duration - time)}</Text>
         </View>
       </>
     </View>

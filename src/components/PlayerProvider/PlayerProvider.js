@@ -35,6 +35,9 @@ function PlayerProvider({ children }) {
     setUrl(episodeUrl);
     setTitle(episodeTitle);
     setPaused(false);
+    setTime(-1);
+    setProgress(-1);
+    setDuration(-1);
   }
 
   function trigger() {
@@ -54,17 +57,41 @@ function PlayerProvider({ children }) {
     setProgress(currentTime / audioDuration);
   }
 
+  function seek(t) {
+    ref.current.seek(t);
+    setTime(t);
+    setProgress(t / duration);
+  }
+
   function seekBy(t) {
     if (playing) {
-      return () => ref.current.seek(time + t);
+      return () => seek(time + t);
     } else {
       return () => {};
     }
   }
 
+  function seekTo(t) {
+    if (playing) {
+      seek(t);
+    }
+  }
+
   return (
     <PlayerContext.Provider
-      value={{ playing, paused, url, title, duration, time, progress, play, trigger, seekBy }}
+      value={{
+        playing,
+        paused,
+        url,
+        title,
+        duration,
+        time,
+        progress,
+        play,
+        trigger,
+        seekBy,
+        seekTo,
+      }}
     >
       {playing && (
         <Video
