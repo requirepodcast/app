@@ -8,10 +8,8 @@ import { theme } from '../utils/theme';
 
 function ListenScreen() {
   const episodes = useSelector(store => store.episodes.episodes);
-  const playerCtx = usePlayer();
+  const { play } = usePlayer();
   const episode = episodes.slice(-1)[0];
-
-  console.log(playerCtx);
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -20,7 +18,7 @@ function ListenScreen() {
       <PlayButton
         style="big"
         disabled={!episode}
-        onPress={() => playerCtx.play({ title: episode.title, url: episode.audioUrl })}
+        onPress={() => play({ title: episode.title, url: episode.audioUrl })}
       />
     </SafeAreaView>
   );

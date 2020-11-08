@@ -6,9 +6,9 @@ const initialState = {
   paused: true,
   url: '',
   title: '',
-  duration: 0,
-  time: 0,
-  progress: 0,
+  duration: -1,
+  time: -1,
+  progress: -1,
   play: () => {},
 };
 
@@ -34,12 +34,34 @@ function PlayerProvider({ children }) {
     setPaused(false);
   }
 
-  console.log('dupadupa123');
+  function trigger() {
+    setPaused(prev => !prev);
+  }
+
+  function onProgress({ currentTime }) {
+    setTime(currentTime);
+    setProgress(currentTime / duration);
+  }
+
+  function onLoad({ duration: audioDuration, currentTime }) {
+    setDuration(audioDuration);
+    setTime(currentTime);
+    setProgress(currentTime / audioDuration);
+  }
 
   return (
-    <PlayerContext.Provider value={{ playing, paused, url, title, duration, time, progress, play }}>
+    <PlayerContext.Provider
+      value={{ playing, paused, url, title, duration, time, progress, play, trigger }}
+    >
       {playing && (
-        <Video audioOnly={true} playInBackground={true} source={{ uri: url }} paused={paused} />
+        <Video
+          audioOnly={true}
+          playInBackground={true}
+          source={{ uri: url }}
+          paused={paused}
+          onProgress={onProgress}
+          onLoad={onLoad}
+        />
       )}
       {children}
     </PlayerContext.Provider>
