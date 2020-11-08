@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import Video from 'react-native-video';
 
 const initialState = {
@@ -14,7 +14,11 @@ const initialState = {
 
 const PlayerContext = createContext(initialState);
 
-function Player({ children }) {
+export function usePlayer() {
+  return useContext(PlayerContext);
+}
+
+function PlayerProvider({ children }) {
   const [playing, setPlaying] = useState(initialState.playing);
   const [paused, setPaused] = useState(initialState.paused);
   const [url, setUrl] = useState(initialState.url);
@@ -30,14 +34,16 @@ function Player({ children }) {
     setPaused(false);
   }
 
+  console.log('dupadupa123');
+
   return (
-    <PlayerContext value={{ playing, paused, url, title, duration, time, progress, play }}>
+    <PlayerContext.Provider value={{ playing, paused, url, title, duration, time, progress, play }}>
       {playing && (
         <Video audioOnly={true} playInBackground={true} source={{ uri: url }} paused={paused} />
       )}
       {children}
-    </PlayerContext>
+    </PlayerContext.Provider>
   );
 }
 
-export default Player;
+export default PlayerProvider;

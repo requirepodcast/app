@@ -3,17 +3,25 @@ import { StyleSheet, Text, SafeAreaView } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import PlayButton from '../components/PlayButton/PlayButton';
+import { usePlayer } from '../components/PlayerProvider/PlayerProvider';
 import { theme } from '../utils/theme';
 
 function ListenScreen() {
   const episodes = useSelector(store => store.episodes.episodes);
+  const playerCtx = usePlayer();
   const episode = episodes.slice(-1)[0];
+
+  console.log(playerCtx);
 
   return (
     <SafeAreaView style={styles.wrapper}>
       <Text style={styles.title}>{episode && episode.title}</Text>
       <Text style={styles.description}>{episode && episode.shortDescription}</Text>
-      <PlayButton style="big" disabled={!episode} />
+      <PlayButton
+        style="big"
+        disabled={!episode}
+        onPress={() => playerCtx.play({ title: episode.title, url: episode.audioUrl })}
+      />
     </SafeAreaView>
   );
 }
