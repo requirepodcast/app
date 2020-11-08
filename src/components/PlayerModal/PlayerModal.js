@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
@@ -6,6 +6,7 @@ import Slider from '@react-native-community/slider';
 import { theme } from '../../utils/theme';
 import ControlButton from './ControlButton';
 import SeekButton from './SeekButton';
+import { usePlayer } from '../PlayerProvider/PlayerProvider';
 
 function formatTime(progress) {
   return new Date(progress * 1000).toISOString().substr(11, 8);
@@ -13,11 +14,7 @@ function formatTime(progress) {
 
 function PlayerModal() {
   const navigation = useNavigation();
-  const [sliderValue, setSliderValue] = useState(0);
-
-  function onSlidingComplete(val) {
-    setSliderValue(val);
-  }
+  const { playing, title, paused, trigger, seekBy } = usePlayer();
 
   return (
     <View style={styles.wrapper}>
@@ -25,24 +22,21 @@ function PlayerModal() {
         <Icon name="close" size={25} color={theme.fg} />
       </TouchableOpacity>
       <>
-        <Text style={styles.title}>{'Nie odtwarzane'}</Text>
+        <Text style={styles.title}>{playing ? title : 'Nie odtwarzane'}</Text>
         <View style={styles.controlButtons}>
-          <SeekButton name="replay-10" disabled={false} />
-          <ControlButton isPaused={false} disabled={false} />
-          <SeekButton name="forward-10" disabled={false} />
+          <SeekButton name="replay-10" disabled={false} onPress={seekBy(-10)} />
+          <ControlButton isPaused={paused} disabled={false} onPress={trigger} />
+          <SeekButton name="forward-10" disabled={false} onPress={seekBy(10)} />
         </View>
         <Slider
           style={styles.slider}
           maximumTrackTintColor={'grey'}
           minimumTrackTintColor={theme.red}
           thumbTintColor={theme.red}
-          value={sliderValue}
-          onSlidingComplete={onSlidingComplete}
-          onValueChange={val => setSliderValue(val)}
         />
         <View style={styles.timerWrapper}>
-          <Text style={styles.timer}>{formatTime(sliderValue)}</Text>
-          <Text style={styles.timer}>-{formatTime(sliderValue)}</Text>
+          <Text style={styles.timer}>{formatTime(0)}</Text>
+          <Text style={styles.timer}>-{formatTime(0)}</Text>
         </View>
       </>
     </View>

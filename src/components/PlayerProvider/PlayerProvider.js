@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useRef, useState } from 'react';
 import Video from 'react-native-video';
 
 const initialState = {
@@ -10,6 +10,8 @@ const initialState = {
   time: -1,
   progress: -1,
   play: () => {},
+  trigger: () => {},
+  seekBy: () => {},
 };
 
 const PlayerContext = createContext(initialState);
@@ -26,6 +28,7 @@ function PlayerProvider({ children }) {
   const [duration, setDuration] = useState(initialState.duration);
   const [time, setTime] = useState(initialState.time);
   const [progress, setProgress] = useState(initialState.progress);
+  const ref = useRef();
 
   function play({ url: episodeUrl, title: episodeTitle }) {
     setPlaying(true);
@@ -35,7 +38,9 @@ function PlayerProvider({ children }) {
   }
 
   function trigger() {
-    setPaused(prev => !prev);
+    if (playing) {
+      setPaused(prev => !prev);
+    }
   }
 
   function onProgress({ currentTime }) {
@@ -49,9 +54,17 @@ function PlayerProvider({ children }) {
     setProgress(currentTime / audioDuration);
   }
 
+  function seekBy(t) {
+    if (playing) {
+      return () => ref.current.seek(time + t);
+    } else {
+      return () => {};
+    }
+  }
+
   return (
     <PlayerContext.Provider
-      value={{ playing, paused, url, title, duration, time, progress, play, trigger }}
+      value={{ playing, paused, url, title, duration, time, progress, play, trigger, seekBy }}
     >
       {playing && (
         <Video
@@ -61,6 +74,7 @@ function PlayerProvider({ children }) {
           paused={paused}
           onProgress={onProgress}
           onLoad={onLoad}
+          ref={ref}
         />
       )}
       {children}
