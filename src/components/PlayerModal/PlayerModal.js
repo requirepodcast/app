@@ -22,6 +22,14 @@ function PlayerModal() {
     setTimeout(() => setSliderValue(null), 200); // Cosmetic purposes
   }
 
+  function sliding(y, n) {
+    return sliderValue === null ? n : y;
+  }
+
+  function getSliderTime() {
+    return sliderValue * duration;
+  }
+
   return (
     <View style={styles.wrapper}>
       <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
@@ -39,13 +47,14 @@ function PlayerModal() {
           maximumTrackTintColor={'grey'}
           minimumTrackTintColor={theme.red}
           thumbTintColor={theme.red}
-          value={sliderValue === null ? progress : undefined}
-          onValueChange={v => setSliderValue(v)}
+          value={sliding(undefined, progress)}
           onSlidingComplete={onSlidingComplete}
+          onSlidingStart={val => setSliderValue(val)}
+          onValueChange={val => setSliderValue(val)}
         />
         <View style={styles.timerWrapper}>
-          <Text style={styles.timer}>{formatTime(time)}</Text>
-          <Text style={styles.timer}>-{formatTime(duration - time)}</Text>
+          <Text style={styles.timer}>{formatTime(sliding(getSliderTime(), time))}</Text>
+          <Text style={styles.timer}>-{formatTime(duration - sliding(getSliderTime(), time))}</Text>
         </View>
       </>
     </View>
