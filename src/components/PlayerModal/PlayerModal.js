@@ -19,22 +19,19 @@ function PlayerModal() {
 
   function onSlidingComplete(v) {
     seekTo(v * duration);
-    setTimeout(() => setSliderValue(null), 200); // Cosmetic purposes
+    setTimeout(() => setSliderValue(null), 500); // Cosmetic purposes
   }
 
-  function sliding(y, n) {
-    return sliderValue === null ? n : y;
-  }
-
-  function getSliderTime() {
-    return sliderValue * duration;
-  }
+  const sliding = sliderValue !== null;
+  const sliderTime = sliderValue * duration;
 
   return (
     <View style={styles.wrapper}>
-      <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
-        <Icon name="close" size={25} color={theme.fg} />
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
+          <Icon name="close" size={25} color={theme.fg} />
+        </TouchableOpacity>
+      </>
       <>
         <Text style={styles.title}>{playing ? title : 'Nie odtwarzane'}</Text>
         <View style={styles.controlButtons}>
@@ -47,14 +44,14 @@ function PlayerModal() {
           maximumTrackTintColor={'grey'}
           minimumTrackTintColor={theme.red}
           thumbTintColor={theme.red}
-          value={sliding(undefined, progress)}
+          value={sliding ? undefined : progress}
           onSlidingComplete={onSlidingComplete}
           onSlidingStart={val => setSliderValue(val)}
           onValueChange={val => setSliderValue(val)}
         />
         <View style={styles.timerWrapper}>
-          <Text style={styles.timer}>{formatTime(sliding(getSliderTime(), time))}</Text>
-          <Text style={styles.timer}>-{formatTime(duration - sliding(getSliderTime(), time))}</Text>
+          <Text style={styles.timer}>{formatTime(sliding ? sliderTime : time)}</Text>
+          <Text style={styles.timer}>-{formatTime(duration - (sliding ? sliderTime : time))}</Text>
         </View>
       </>
     </View>

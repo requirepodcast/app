@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Animated } from 'react-native';
 import { theme } from '../../utils/theme';
 
 function Progress({ progress }) {
   return (
     <View style={styles.wrapper}>
-      <View style={{ ...styles.bar, width: `${progress * 100}%` }} />
+      <Animated.View style={{ ...styles.bar, width: `${progress * 100}%` }} />
     </View>
   );
 }

@@ -15,11 +15,7 @@ function ListenScreen() {
     <SafeAreaView style={styles.wrapper}>
       <Text style={styles.title}>{episode && episode.title}</Text>
       <Text style={styles.description}>{episode && episode.shortDescription}</Text>
-      <PlayButton
-        style="big"
-        disabled={!episode}
-        onPress={() => play({ title: episode.title, url: episode.audioUrl })}
-      />
+      <PlayButton style="big" disabled={!episode} onPress={() => play({ episode })} />
     </SafeAreaView>
   );
 }

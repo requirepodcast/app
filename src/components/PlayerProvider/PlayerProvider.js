@@ -1,17 +1,20 @@
 import React, { createContext, useContext, useRef, useState } from 'react';
 import Video from 'react-native-video';
+import EpisodeProgressService from '../../services/EpisodeProgressService';
 
 const initialState = {
   playing: false,
   paused: true,
   url: '',
   title: '',
+  slug: '',
   duration: -1,
   time: -1,
   progress: -1,
   play: () => {},
   trigger: () => {},
   seekBy: () => {},
+  loaded: false,
 };
 
 const PlayerContext = createContext(initialState);
@@ -25,19 +28,31 @@ function PlayerProvider({ children }) {
   const [paused, setPaused] = useState(initialState.paused);
   const [url, setUrl] = useState(initialState.url);
   const [title, setTitle] = useState(initialState.title);
+  const [slug, setSlug] = useState(initialState.slug);
   const [duration, setDuration] = useState(initialState.duration);
   const [time, setTime] = useState(initialState.time);
   const [progress, setProgress] = useState(initialState.progress);
+  const [loaded, setLoaded] = useState(initialState.loaded);
+
+  const [autoPlay, setAutoPlay] = useState(true);
+
   const ref = useRef();
 
-  function play({ url: episodeUrl, title: episodeTitle }) {
+  function play({
+    episode: { audioUrl, title: episodeTitle, slug: episodeSlug },
+    autoPlay: autoPlayAudio = true,
+  }) {
+    setLoaded(false);
     setPlaying(true);
-    setUrl(episodeUrl);
+    setUrl(audioUrl);
     setTitle(episodeTitle);
-    setPaused(false);
+    setSlug(episodeSlug);
+    setPaused(true);
     setTime(-1);
     setProgress(-1);
     setDuration(-1);
+
+    setAutoPlay(autoPlayAudio);
   }
 
   function trigger() {
@@ -49,12 +64,22 @@ function PlayerProvider({ children }) {
   function onProgress({ currentTime }) {
     setTime(currentTime);
     setProgress(currentTime / duration);
+
+    EpisodeProgressService.saveProgress(slug, currentTime);
   }
 
-  function onLoad({ duration: audioDuration, currentTime }) {
+  async function onLoad({ duration: audioDuration, currentTime }) {
     setDuration(audioDuration);
     setTime(currentTime);
     setProgress(currentTime / audioDuration);
+
+    const savedTime = await EpisodeProgressService.getProgress(slug);
+    seekTo(Number(savedTime));
+
+    setLoaded(true);
+    autoPlay && setPaused(false);
+
+    setAutoPlay(true);
   }
 
   function seek(t) {
@@ -91,6 +116,7 @@ function PlayerProvider({ children }) {
         trigger,
         seekBy,
         seekTo,
+        loaded,
       }}
     >
       {playing && (

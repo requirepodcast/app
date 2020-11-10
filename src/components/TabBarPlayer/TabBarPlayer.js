@@ -9,11 +9,11 @@ import { usePlayer } from '../PlayerProvider/PlayerProvider';
 
 function TabBarPlayer() {
   const { navigate } = useNavigation();
-  const { playing, paused, title, trigger, progress } = usePlayer();
+  const { playing, paused, title, trigger, progress, loaded } = usePlayer();
 
   return (
     <>
-      <Progress progress={progress} />
+      <Progress progress={loaded ? progress : 1} />
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => navigate('PlayerModal')}

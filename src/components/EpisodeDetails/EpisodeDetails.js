@@ -6,6 +6,7 @@ import PlayButton from '../PlayButton/PlayButton';
 import analytics from '@react-native-firebase/analytics';
 
 import logo from '../../images/RequireLogo.png';
+import { usePlayer } from '../PlayerProvider/PlayerProvider';
 
 function EpisodeDetails({
   route: {
@@ -13,8 +14,10 @@ function EpisodeDetails({
   },
   navigation,
 }) {
+  const { play } = usePlayer();
+
   useLayoutEffect(() => {
-    navigation.setOptions({ title: episode.title });
+    navigation.setOptions({ episode });
 
     analytics().logScreenView({});
   });
@@ -28,7 +31,10 @@ function EpisodeDetails({
           <Text style={styles.title}>{episode.title}</Text>
         </View>
       </View>
-      <PlayButton size="small" />
+      <PlayButton
+        size="small"
+        onPress={() => play({ url: episode.audioUrl, title: episode.title })}
+      />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <MarkdownView
           onLinkPress={url => Linking.openURL(url)}
