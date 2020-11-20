@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useRef, useState } from 'react';
-import Video from 'react-native-video';
+import Sound from 'react-native-video';
 import EpisodeProgressService from '../../services/EpisodeProgressService';
+import { useLastPlayed } from '../../utils/useLastPlayed';
 
 const initialState = {
   playing: false,
@@ -33,17 +34,21 @@ function PlayerProvider({ children }) {
   const [time, setTime] = useState(initialState.time);
   const [progress, setProgress] = useState(initialState.progress);
   const [loaded, setLoaded] = useState(initialState.loaded);
-
   const [autoPlay, setAutoPlay] = useState(true);
+  const playerRef = useRef();
 
-  const ref = useRef();
+  useLastPlayed(episode => {
+    play({
+      episode,
+      autoPlay: false,
+    });
+  });
 
   function play({
     episode: { audioUrl, title: episodeTitle, slug: episodeSlug },
     autoPlay: autoPlayAudio = true,
   }) {
     setLoaded(false);
-    setPlaying(true);
     setUrl(audioUrl);
     setTitle(episodeTitle);
     setSlug(episodeSlug);
@@ -51,6 +56,7 @@ function PlayerProvider({ children }) {
     setTime(-1);
     setProgress(-1);
     setDuration(-1);
+    setPlaying(true);
 
     setAutoPlay(autoPlayAudio);
   }
@@ -80,10 +86,27 @@ function PlayerProvider({ children }) {
     autoPlay && setPaused(false);
 
     setAutoPlay(true);
+
+    EpisodeProgressService.lastPlayed.set(slug);
+  }
+
+  function onEnd() {
+    setPlaying(initialState.playing);
+    setPaused(initialState.paused);
+    setUrl(initialState.url);
+    setTitle(initialState.title);
+    setSlug(initialState.slug);
+    setDuration(initialState.duration);
+    setTime(initialState.time);
+    setProgress(initialState.progress);
+    setLoaded(initialState.loaded);
+    setAutoPlay(true);
+
+    EpisodeProgressService.lastPlayed.clean();
   }
 
   function seek(t) {
-    ref.current.seek(t);
+    playerRef.current.seek(t);
     setTime(t);
     setProgress(t / duration);
   }
@@ -120,14 +143,15 @@ function PlayerProvider({ children }) {
       }}
     >
       {playing && (
-        <Video
+        <Sound
           audioOnly={true}
           playInBackground={true}
           source={{ uri: url }}
           paused={paused}
           onProgress={onProgress}
           onLoad={onLoad}
-          ref={ref}
+          ref={playerRef}
+          onEnd={onEnd}
         />
       )}
       {children}

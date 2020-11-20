@@ -10,9 +10,9 @@ export default {
   cleanProgress(id) {
     return AsyncStorage.removeItem(`progress_${id}`);
   },
-  lastPlaying: {
-    set(id) {
-      return AsyncStorage.setItem('last_playing', id);
+  lastPlayed: {
+    set(slug) {
+      return AsyncStorage.setItem('last_playing', slug);
     },
     get() {
       return AsyncStorage.getItem('last_playing');
