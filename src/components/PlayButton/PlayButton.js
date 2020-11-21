@@ -28,6 +28,7 @@ function PlayButton({ onPress, style, disabled = false }) {
       onPress={onPress}
       activeOpacity={0.7}
       disabled={disabled}
+      testID={'button'}
     >
       <Icon style={buttonStyles} name="play">
         {!(style === 'big') && <Text>{' Odtwórz'}</Text>}

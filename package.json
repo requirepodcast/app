@@ -41,6 +41,7 @@
     "@react-native-community/eslint-config": "^1.1.0",
     "@testing-library/jest-native": "^3.4.3",
     "@testing-library/react-native": "^7.1.0",
+    "@types/jest": "^26.0.15",
     "babel-jest": "^25.1.0",
     "eslint": "^6.5.1",
     "jest": "^25.1.0",
