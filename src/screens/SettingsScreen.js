@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch } from 'react-native';
+import { View, Text, StyleSheet, Switch, Alert } from 'react-native';
+import Restart from 'react-native-restart';
 import { theme } from '../utils/theme';
 import { version } from '../../package.json';
 import NotificationSubscribtionService from '../services/NotificationSubscribtionService';
 import { useMount } from '../utils/useMount';
+import Item from '../components/SettingsItem/SettingsItem';
+import AsyncStorage from '@react-native-community/async-storage';
 
 function SettingsScreen() {
   const [subscribed, setSubscribed] = useState(undefined);
@@ -16,6 +19,30 @@ function SettingsScreen() {
       setSubscribed(true);
       NotificationSubscribtionService.subscribe();
     }
+  }
+
+  function resetData() {
+    Alert.alert(
+      'Resetowanie danych',
+      'Czy na pewno chcesz usunąć stan przesłuchiwania odcinków, ustawienia itp?',
+      [
+        {
+          text: 'Nie',
+          style: 'cancel',
+        },
+        {
+          text: 'Tak',
+          onPress: () => {
+            AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
+            Restart.Restart();
+          },
+          style: 'destructive',
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
   }
 
   useMount(() => {
@@ -31,20 +58,22 @@ function SettingsScreen() {
   return (
     <View style={styles.wrapper}>
       <View>
-        <View style={styles.item}>
+        <Item>
           {subscribed !== undefined && (
             <>
               <Text>Powiadomienia o nowych odcinkach</Text>
               <Switch
                 value={subscribed}
                 onValueChange={toggleSubscribed}
-                thumbColor={theme.red}
-                trackColor={{ true: '#3f3f4f', false: '#3f3f4f' }}
+                thumbColor={subscribed ? theme.red : 'gray'}
+                trackColor={{ false: '#3f3f4f', true: theme.red }}
               />
             </>
           )}
-        </View>
-        <View style={styles.separator} />
+        </Item>
+        <Item onPress={resetData}>
+          <Text>Zresetuj zapisane dane</Text>
+        </Item>
       </View>
       <View>
         <Text style={styles.version}>{'\xA9'} requirepodcast_app</Text>
@@ -67,18 +96,6 @@ const styles = StyleSheet.create({
   version: {
     color: 'gray',
     textAlign: 'center',
-  },
-  item: {
-    paddingHorizontal: 5,
-    paddingVertical: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: theme.bg.darker,
-    marginHorizontal: 5,
   },
 });
 

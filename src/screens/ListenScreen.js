@@ -13,7 +13,7 @@ function ListenScreen() {
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.title}>Najnowszy odcinek</Text>
+      <Text style={styles.title}>Najnowszy odcinek:</Text>
       <SafeAreaView style={styles.container}>
         <Text style={styles.episodeTitle}>{episode && episode.title}</Text>
         <Text style={styles.episodeDescription}>{episode && episode.shortDescription}</Text>

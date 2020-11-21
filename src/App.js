@@ -71,7 +71,7 @@ function App() {
             },
             {
               text: 'Tak',
-              onPress: NotificationSubscribtionService.unsubscribe,
+              onPress: NotificationSubscribtionService.subscribe,
             },
           ],
         );

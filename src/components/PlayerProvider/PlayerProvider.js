@@ -3,7 +3,6 @@ import Sound from 'react-native-video';
 import AudioControl from 'react-native-music-control';
 import EpisodeProgressService from '../../services/EpisodeProgressService';
 import { useLastPlayed } from '../../utils/useLastPlayed';
-import { useMount } from '../../utils/useMount';
 
 // Audio controls
 AudioControl.enableControl('play', true);
