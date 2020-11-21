@@ -1,11 +1,4 @@
-// @flow
-import { Episode } from '../../types';
-import { Action } from '../actions/episodes';
-
-function reducer(
-  state: { episodes: Episode[] } = { episodes: [] },
-  action: Action,
-) {
+function reducer(state = { episodes: [] }, action) {
   switch (action.type) {
     case 'EPISODES':
       return { ...state, episodes: action.episodes };

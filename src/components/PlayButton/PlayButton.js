@@ -5,21 +5,30 @@ import { theme } from '../../utils/theme';
 
 function PlayButton({ onPress, style, disabled = false }) {
   let buttonStyles;
+  let wrapperStyles;
 
   switch (style) {
     case 'small':
       buttonStyles = styles.small;
+      wrapperStyles = styles.wrapperSmall;
       break;
     case 'big':
       buttonStyles = styles.big;
+      wrapperStyles = styles.wrapperBig;
       break;
     default:
       buttonStyles = styles.small;
+      wrapperStyles = styles.wrapperSmall;
       break;
   }
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7} disabled={disabled}>
+    <TouchableOpacity
+      style={wrapperStyles}
+      onPress={onPress}
+      activeOpacity={0.7}
+      disabled={disabled}
+    >
       <Icon style={buttonStyles} name="play">
         {!(style === 'big') && <Text>{' Odtwórz'}</Text>}
       </Icon>
@@ -33,9 +42,9 @@ const styles = StyleSheet.create({
     color: theme.fg,
     fontSize: 50,
     borderRadius: 45,
+    padding: 20,
     overflow: 'hidden',
     textAlign: 'center',
-    padding: 20,
   },
   small: {
     backgroundColor: theme.red,
@@ -51,6 +60,11 @@ const styles = StyleSheet.create({
   text: {
     color: theme.fg,
   },
+  wrapperBig: {
+    width: 90,
+    height: 90,
+  },
+  wrapperSmall: {},
 });
 
 export default PlayButton;

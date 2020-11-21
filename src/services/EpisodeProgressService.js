@@ -1,19 +1,18 @@
-/* flow */
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default {
-  saveProgress(id: string, progress: number) {
+  saveProgress(id, progress) {
     return AsyncStorage.setItem(`progress_${id}`, progress.toString());
   },
-  async getProgress(id: string) {
+  async getProgress(id) {
     return (await AsyncStorage.getItem(`progress_${id}`)) || 0;
   },
-  cleanProgress(id: string) {
+  cleanProgress(id) {
     return AsyncStorage.removeItem(`progress_${id}`);
   },
-  lastPlaying: {
-    set(id: string) {
-      return AsyncStorage.setItem('last_playing', id);
+  lastPlayed: {
+    set(slug) {
+      return AsyncStorage.setItem('last_playing', slug);
     },
     get() {
       return AsyncStorage.getItem('last_playing');

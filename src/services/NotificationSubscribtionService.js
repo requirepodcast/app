@@ -1,4 +1,3 @@
-/* flow */
 import AsyncStorage from '@react-native-community/async-storage';
 import messaging from '@react-native-firebase/messaging';
 
@@ -11,7 +10,7 @@ export default {
     await messaging().unsubscribeFromTopic('episodeNotifications');
     await AsyncStorage.setItem('SubscribedToNotifications', 'false');
   },
-  async isSubscribed(): string {
+  async isSubscribed() {
     const val = await AsyncStorage.getItem('SubscribedToNotifications');
 
     if (!val) {

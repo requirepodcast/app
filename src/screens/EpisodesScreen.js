@@ -43,7 +43,7 @@ function EpisodesScreen() {
         }}
       />
       <Stack.Screen
-        name="Details"
+        name="Odcinek"
         component={EpisodeDetails}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

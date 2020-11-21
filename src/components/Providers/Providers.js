@@ -1,29 +1,32 @@
 import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
 import createSagaMiddleware from 'redux-saga';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 
 import { rootSaga } from '../../store/sagas/sagas';
 import episodes from '../../store/reducers/episodes';
-import player from '../../store/reducers/player';
+
+import PlayerProvider from '../PlayerProvider/PlayerProvider';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { getEpisodes } from '../../store/actions/episodes';
+import { useMount } from '../../utils/useMount';
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(
-  combineReducers({ episodes, player }),
-  applyMiddleware(sagaMiddleware),
-);
+const store = createStore(combineReducers({ episodes }), applyMiddleware(sagaMiddleware));
 
 sagaMiddleware.run(rootSaga);
 
 function Providers({ children }) {
+  useMount(() => {
+    store.dispatch(getEpisodes());
+  });
+
   return (
     <Provider store={store}>
-      <SafeAreaProvider>
-        <NavigationContainer>{children}</NavigationContainer>
-      </SafeAreaProvider>
+      <PlayerProvider>
+        <SafeAreaProvider>{children}</SafeAreaProvider>
+      </PlayerProvider>
     </Provider>
   );
 }

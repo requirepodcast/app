@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import Slider from '@react-native-community/slider';
-import TrackPlayer from 'react-native-track-player';
 import { theme } from '../../utils/theme';
 import ControlButton from './ControlButton';
 import SeekButton from './SeekButton';
+import { usePlayer } from '../PlayerProvider/PlayerProvider';
 
 function formatTime(progress) {
   return new Date(progress * 1000).toISOString().substr(11, 8);
@@ -15,61 +14,44 @@ function formatTime(progress) {
 
 function PlayerModal() {
   const navigation = useNavigation();
-  const [sliderValue, setSliderValue] = useState(0);
-  const { position, duration, episode, playing, disabled } = useSelector(
-    (state) => state.player,
-  );
+  const [sliderValue, setSliderValue] = useState(null);
+  const { playing, title, paused, trigger, seekBy, time, duration, progress, seekTo } = usePlayer();
 
-  const progress = sliderValue || position / duration || 0;
-
-  function onSlidingComplete(val) {
-    TrackPlayer.seekTo(val * duration);
-    setSliderValue(0);
+  function onSlidingComplete(v) {
+    seekTo(v * duration);
+    setTimeout(() => setSliderValue(null), 500); // Cosmetic purposes
   }
+
+  const sliding = sliderValue !== null;
+  const sliderTime = sliderValue * duration;
 
   return (
     <View style={styles.wrapper}>
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Icon name="close" size={25} color={theme.fg} />
-      </TouchableOpacity>
       <>
-        <Text style={styles.title}>
-          {episode ? episode.title : 'Nie odtwarzane'}
-        </Text>
+        <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
+          <Icon name="close" size={25} color={theme.fg} />
+        </TouchableOpacity>
+      </>
+      <>
+        <Text style={styles.title}>{playing ? title : 'Nie odtwarzane'}</Text>
         <View style={styles.controlButtons}>
-          <SeekButton
-            onPress={() => TrackPlayer.seekTo(position - 10)}
-            name="replay-10"
-            disabled={disabled}
-          />
-          <ControlButton
-            onPress={() => (playing ? TrackPlayer.pause() : TrackPlayer.play())}
-            isPaused={!playing}
-            disabled={disabled}
-          />
-          <SeekButton
-            onPress={() => TrackPlayer.seekTo(position + 10)}
-            name="forward-10"
-            disabled={disabled}
-          />
+          <SeekButton name="replay-10" disabled={false} onPress={seekBy(-10)} />
+          <ControlButton isPaused={paused} disabled={false} onPress={trigger} />
+          <SeekButton name="forward-10" disabled={false} onPress={seekBy(10)} />
         </View>
         <Slider
           style={styles.slider}
           maximumTrackTintColor={'grey'}
           minimumTrackTintColor={theme.red}
           thumbTintColor={theme.red}
-          value={!sliderValue ? position / duration || 0 : null}
+          value={sliding ? undefined : progress}
           onSlidingComplete={onSlidingComplete}
-          onValueChange={(val) => setSliderValue(val)}
+          onSlidingStart={val => setSliderValue(val)}
+          onValueChange={val => setSliderValue(val)}
         />
         <View style={styles.timerWrapper}>
-          <Text style={styles.timer}>{formatTime(progress * duration)}</Text>
-          <Text style={styles.timer}>
-            -{formatTime(duration - progress * duration)}
-          </Text>
+          <Text style={styles.timer}>{formatTime(sliding ? sliderTime : time)}</Text>
+          <Text style={styles.timer}>-{formatTime(duration - (sliding ? sliderTime : time))}</Text>
         </View>
       </>
     </View>
