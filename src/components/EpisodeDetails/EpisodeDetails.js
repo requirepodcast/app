@@ -1,9 +1,9 @@
 import React, { useLayoutEffect } from 'react';
 import { View, ScrollView, StyleSheet, Text, Image, Linking } from 'react-native';
 import { MarkdownView } from 'react-native-markdown-view';
+import analytics from '@react-native-firebase/analytics';
 import { theme } from '../../utils/theme';
 import PlayButton from '../PlayButton/PlayButton';
-import analytics from '@react-native-firebase/analytics';
 
 import logo from '../../images/RequireLogo.png';
 import { usePlayer } from '../PlayerProvider/PlayerProvider';

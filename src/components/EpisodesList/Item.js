@@ -10,7 +10,7 @@ function Item({ episode, queuePosition }) {
     <TouchableHighlight
       underlayColor={theme.bg.lighter}
       activeOpacity={1}
-      onPress={() => navigation.navigate('Details', { episode, queuePosition })}
+      onPress={() => navigation.navigate('Odcinek', { episode, queuePosition })}
     >
       <Text style={styles.title}>{episode.title}</Text>
     </TouchableHighlight>

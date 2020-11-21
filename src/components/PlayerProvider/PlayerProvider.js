@@ -1,14 +1,27 @@
-import React, { createContext, useContext, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import Sound from 'react-native-video';
+import AudioControl from 'react-native-music-control';
 import EpisodeProgressService from '../../services/EpisodeProgressService';
 import { useLastPlayed } from '../../utils/useLastPlayed';
+import { useMount } from '../../utils/useMount';
+
+// Audio controls
+AudioControl.enableControl('play', true);
+AudioControl.enableControl('pause', true);
+AudioControl.enableControl('stop', false);
+AudioControl.enableControl('seek', true);
+AudioControl.enableControl('remoteVolume', false);
+AudioControl.enableControl('changePlaybackPosition', true);
 
 const initialState = {
   playing: false,
   paused: true,
-  url: '',
-  title: '',
-  slug: '',
+  episodeMeta: {
+    title: '',
+    slug: '',
+    url: '',
+    description: '',
+  },
   duration: -1,
   time: -1,
   progress: -1,
@@ -27,9 +40,7 @@ export function usePlayer() {
 function PlayerProvider({ children }) {
   const [playing, setPlaying] = useState(initialState.playing);
   const [paused, setPaused] = useState(initialState.paused);
-  const [url, setUrl] = useState(initialState.url);
-  const [title, setTitle] = useState(initialState.title);
-  const [slug, setSlug] = useState(initialState.slug);
+  const [episodeMeta, setEpisodeMeta] = useState(initialState.episodeMeta);
   const [duration, setDuration] = useState(initialState.duration);
   const [time, setTime] = useState(initialState.time);
   const [progress, setProgress] = useState(initialState.progress);
@@ -44,14 +55,38 @@ function PlayerProvider({ children }) {
     });
   });
 
+  useEffect(() => {
+    !playing && AudioControl.resetNowPlaying();
+
+    AudioControl.enableBackgroundMode(true);
+    AudioControl.handleAudioInterruptions(true);
+
+    AudioControl.on('play', () => {
+      if (playing) {
+        AudioControl.updatePlayback({ state: AudioControl.STATE_PLAYING });
+        playing && setPaused(false);
+      }
+    });
+    AudioControl.on('pause', () => {
+      if (playing) {
+        AudioControl.updatePlayback({ state: AudioControl.STATE_PAUSED });
+        setPaused(true);
+      }
+    });
+    AudioControl.on('seek', t => playing && seek(t));
+  }, [playing]);
+
   function play({
-    episode: { audioUrl, title: episodeTitle, slug: episodeSlug },
+    episode: { audioUrl: url, title, slug, shortDescription: description },
     autoPlay: autoPlayAudio = true,
   }) {
     setLoaded(false);
-    setUrl(audioUrl);
-    setTitle(episodeTitle);
-    setSlug(episodeSlug);
+    setEpisodeMeta({
+      url,
+      title,
+      slug,
+      description,
+    });
     setPaused(true);
     setTime(-1);
     setProgress(-1);
@@ -63,6 +98,9 @@ function PlayerProvider({ children }) {
 
   function trigger() {
     if (playing) {
+      AudioControl.updatePlayback({
+        state: paused ? AudioControl.STATE_PLAYING : AudioControl.STATE_PAUSED,
+      });
       setPaused(prev => !prev);
     }
   }
@@ -71,7 +109,9 @@ function PlayerProvider({ children }) {
     setTime(currentTime);
     setProgress(currentTime / duration);
 
-    EpisodeProgressService.saveProgress(slug, currentTime);
+    AudioControl.updatePlayback({ elapsedTime: currentTime });
+
+    EpisodeProgressService.saveProgress(episodeMeta.slug, currentTime);
   }
 
   async function onLoad({ duration: audioDuration, currentTime }) {
@@ -79,28 +119,39 @@ function PlayerProvider({ children }) {
     setTime(currentTime);
     setProgress(currentTime / audioDuration);
 
-    const savedTime = await EpisodeProgressService.getProgress(slug);
+    const savedTime = await EpisodeProgressService.getProgress(episodeMeta.slug);
     seekTo(Number(savedTime));
+
+    AudioControl.setNowPlaying({
+      title: episodeMeta.title,
+      artwork: require('../../images/RequireLogo.png'),
+      artist: 'Require Podcast',
+      genre: 'Podcast',
+      duration,
+      description: episodeMeta.description,
+      color: 0x0f111a,
+      colorized: true,
+    });
 
     setLoaded(true);
     autoPlay && setPaused(false);
 
     setAutoPlay(true);
 
-    EpisodeProgressService.lastPlayed.set(slug);
+    EpisodeProgressService.lastPlayed.set(episodeMeta.slug);
   }
 
   function onEnd() {
     setPlaying(initialState.playing);
     setPaused(initialState.paused);
-    setUrl(initialState.url);
-    setTitle(initialState.title);
-    setSlug(initialState.slug);
+    setEpisodeMeta(initialState.episodeMeta);
     setDuration(initialState.duration);
     setTime(initialState.time);
     setProgress(initialState.progress);
     setLoaded(initialState.loaded);
     setAutoPlay(true);
+
+    AudioControl.resetNowPlaying();
 
     EpisodeProgressService.lastPlayed.clean();
   }
@@ -109,6 +160,7 @@ function PlayerProvider({ children }) {
     playerRef.current.seek(t);
     setTime(t);
     setProgress(t / duration);
+    AudioControl.updatePlayback({ elapsedTime: t });
   }
 
   function seekBy(t) {
@@ -130,8 +182,8 @@ function PlayerProvider({ children }) {
       value={{
         playing,
         paused,
-        url,
-        title,
+        url: episodeMeta.url,
+        title: episodeMeta.title,
         duration,
         time,
         progress,
@@ -146,7 +198,7 @@ function PlayerProvider({ children }) {
         <Sound
           audioOnly={true}
           playInBackground={true}
-          source={{ uri: url }}
+          source={{ uri: episodeMeta.url }}
           paused={paused}
           onProgress={onProgress}
           onLoad={onLoad}
