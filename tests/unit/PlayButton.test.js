@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import PlayButton from '../../components/PlayButton/PlayButton';
+import PlayButton from '../../src/components/PlayButton/PlayButton';
 
 describe('PlayButton', () => {
   test('should render without errors', () => {
