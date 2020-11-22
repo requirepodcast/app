@@ -26,12 +26,4 @@ W celu stworzenia tej apki, użyliśmy Reacta Native. Dodatkowo wykorzystaliśmy
 
 Masz pomysł jak ulepszyć naszą aplikację? Chcesz nam pomóc w jej rozwoju? Sprawdź informacje w pliku [contributions.md](contributions.md)
 
-### Screenshoty
-
-<img src="screenshots/sc1.png" width="250" />
-<img src="screenshots/sc2.png" width="250" />
-<img src="screenshots/sc3.png" width="250" />
-<img src="screenshots/sc4.png" width="250" />
-<img src="screenshots/sc5.png" width="250" />
-
 **Po więcej newsów, śledźcie nas na [Instagramie](https://instagram.com/requirepodcast), a wolnym czasie wpadnijcie na naszego [Discorda](https://require.podcast.gq/discord)**

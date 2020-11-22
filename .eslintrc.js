@@ -5,4 +5,5 @@ module.exports = {
     'react-native/no-inline-styles': 'off',
     'react-hooks/exhaustive-deps': 'off',
   },
+  ignorePatterns: ['www/**/*'],
 };
