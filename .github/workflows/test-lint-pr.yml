@@ -1,6 +1,9 @@
 name: Test and lint PR
 
-on: pull_request
+on:
+  pull_request:
+    paths-ignore:
+      - 'www'
 
 jobs:
   test_and_lint:
